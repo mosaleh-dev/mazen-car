@@ -1,0 +1,25 @@
+/* Add basic resets or global styles here */
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+}
+
+#app,
+#cars-list,
+#login-form-container,
+#signup-form-container,
+#admin-login-form-container,
+#admin-dashboard,
+#booking-form-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+h1 {
+  color: #333;
+}
+
+/* Add more specific styles as needed */

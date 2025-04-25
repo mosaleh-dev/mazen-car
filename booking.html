@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book a Car - Car Rental System</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div id="booking-form-container">
+      <h1>Book a Car</h1>
+      <p>
+        <a href="/cars.html">Back to Cars</a> | <a href="/">Back to Home</a>
+      </p>
+      <!-- Booking form will be added here, likely pre-filled with car details -->
+      <form id="booking-form">
+        <!-- Car details (read-only) -->
+        <div id="car-details"></div>
+        <!-- Booking details -->
+        <div>
+          <label for="start-date">Start Date:</label>
+          <input type="date" id="start-date" name="start-date" required />
+        </div>
+        <div>
+          <label for="end-date">End Date:</label>
+          <input type="date" id="end-date" name="end-date" required />
+        </div>
+        <button type="submit">Confirm Booking</button>
+      </form>
+    </div>
+    <script type="module" src="/js/main.js"></script>
+    <!-- You might create a specific JS module for this page later -->
+    <!-- <script type="module" src="/booking.js"></script> -->
+  </body>
+</html>

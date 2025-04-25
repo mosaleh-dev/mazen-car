@@ -1,0 +1,39 @@
+{
+  "name": "car-rental-system",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "eslint": "^9.25.1",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3",
+    "stylelint": "^16.19.0",
+    "stylelint-config-standard": "^38.0.0",
+    "vite": "^6.3.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.5",
+    "pocketbase": "^0.26.0"
+  },
+  "scripts": {
+    "lint:js": "eslint . --ext js --report-unused-disable-directives --max-warnings 0",
+    "lint:css": "stylelint --fix \"**/*.css\"",
+    "lint": "npm run lint:js && npm run lint:css",
+    "format": "prettier --write .",
+    "pocketbase": "./pocketbasebin serve",
+    "dev": "vite",
+    "start": "concurrently --kill-others-on-fail \"npm:dev\" \"npm:pocketbase\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.css": "stylelint --fix",
+    "*.{js,css,md,html,json,cjs,mjs,yaml,yml}": "prettier --write"
+  }
+}
