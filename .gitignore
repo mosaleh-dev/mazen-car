@@ -8,6 +8,7 @@ dist/
 pb_data/*.db
 pb_data/storage/*
 pb_data/types.d.ts
+bin/*
 
 # Logs
 *.log

@@ -2,9 +2,13 @@
   "name": "car-rental-system",
   "private": true,
   "version": "0.0.0",
+  "config": {
+    "pocketbaseVersion": "0.27.1"
+  },
   "type": "module",
   "devDependencies": {
     "@web-std/file": "^3.0.3",
+    "adm-zip": "^0.5.16",
     "concurrently": "^9.1.2",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
@@ -25,7 +29,7 @@
     "lint:css": "stylelint --fix \"**/*.css\"",
     "lint": "npm run lint:js && npm run lint:css",
     "format": "prettier --write .",
-    "pocketbase": "./pocketbasebin serve",
+    "pocketbase": "node ./scripts/run-pocketbase.js",
     "dev": "vite",
     "start": "concurrently --kill-others-on-fail \"npm:dev\" \"npm:pocketbase\"",
     "build": "vite build",
