@@ -1,5 +1,7 @@
+import { POCKETBASE_URL } from './pocketbase';
+
 export function getFileUrl(record, fileName) {
-  const baseUrl = 'http://localhost:8090/api/files/';
+  const baseUrl = POCKETBASE_URL + '/api/files/';
   const collectionId = record?.collectionId;
   const recordId = record?.id;
   if (!collectionId || !recordId || !fileName || typeof fileName !== 'string') {

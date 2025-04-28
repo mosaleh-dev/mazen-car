@@ -18,6 +18,7 @@
     "prettier": "^3.5.3",
     "stylelint": "^16.19.0",
     "stylelint-config-standard": "^38.0.0",
+    "tunnelmole": "^2.3.8",
     "vite": "^6.3.1"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "format": "prettier --write .",
     "pocketbase": "node ./scripts/run-pocketbase.js",
     "dev": "vite",
+    "start:expose": "node ./scripts/run-expose.js",
     "start": "concurrently --kill-others-on-fail \"npm:dev\" \"npm:pocketbase\"",
     "build": "vite build",
     "preview": "vite preview",
