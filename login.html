@@ -3,26 +3,99 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Car Rental System</title>
-    <script defer type="module" src="/js/pages/login.js"></script>
-    <link rel="stylesheet" href="/css/style.css" />
+    <title>User Sign In</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/login.css" />
+    <style></style>
   </head>
+
   <body>
-    <div id="login-form-container">
-      <h1>User Login</h1>
-      <p><a href="/">Back to Home</a></p>
-      <form id="login-form">
-        <div>
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required />
-        </div>
-        <div>
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <p>Don't have an account? <a href="/signup.html">Sign Up</a></p>
-    </div>
+    <section class="big-container">
+      <section class="big-container-dash">
+        <section class="form-box">
+          <header class="heading">
+            <h1>Sign In</h1>
+            <p class="mt-2">Access Your Premium Car Rentals Account.</p>
+          </header>
+          <main class="mt-sm-2">
+            <div class="hr-wrapper">
+              <hr class="hr-line" />
+              <span class="hr-text">Your Credentials Please</span>
+              <hr class="hr-line" />
+            </div>
+            <form
+              class="needs-validation"
+              id="login-form"
+              novalidate
+              action=""
+              method="get"
+            >
+              <div class="row">
+                <div class="col-12 mb-3">
+                  <label for="email" class="form-label">Email:</label>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    pattern="[a-z0-9._%+\-]+@gmail\.com$"
+                    class="form-control"
+                    placeholder="example@gmail.com"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please enter a valid Gmail address.
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label for="password" class="form-label">Password:</label>
+                  <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="At least 8 characters"
+                    pattern=".{8,}"
+                    title="Eight or more characters"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid password (at least 8 characters).
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="d-flex justify-content-start align-content-center align-items-center"
+              >
+                <button type="submit" class="doclick btn btn-primary">
+                  Sign In
+                </button>
+                <a
+                  href="UserData.html"
+                  class="link-offset-2 link-underline link-underline-opacity-0 mx-2"
+                  >Don't have an account? Register</a
+                >
+              </div>
+            </form>
+          </main>
+        </section>
+        <section class="d-flex justify-content-center form-control handsOfImg">
+          <img class="w-100" src="./Img/20945933.jpg" alt="" />
+        </section>
+      </section>
+    </section>
+
+    <!-- <script src="valdiateSignIn.js"></script> -->
+    <script type="module" src="/js/pages/login.js"></script>
   </body>
 </html>
