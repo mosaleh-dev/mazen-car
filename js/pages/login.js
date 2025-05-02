@@ -7,8 +7,9 @@ import {
 } from '../modules/auth.js';
 
 async function loginFormHandler(event) {
-  logout();
   event.preventDefault();
+  logout();
+
   console.log('form login');
   const formElement = event.target;
   const formData = new FormData(formElement);
@@ -22,7 +23,7 @@ async function loginFormHandler(event) {
   } else if (log.success == true && !isAdmin()) {
     location.href = '/';
   } else {
-    console.log(Error('login failed'));
+    console.error('Login failed', isLoggedIn());
   }
 
   console.log('current user', getCurrentUser());
@@ -37,25 +38,13 @@ if (loginForm) {
 
 (() => {
   'use strict';
+
   const forms = document.querySelectorAll('.needs-validation');
   Array.from(forms).forEach((form) => {
     form.addEventListener('submit', (event) => {
-      const password = document.getElementById('password');
-      const confirmPassword = document.getElementById('confirm-password');
-
       if (!form.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();
-      }
-
-      if (password.value !== confirmPassword.value) {
-        event.preventDefault();
-        event.stopPropagation();
-        confirmPassword.setCustomValidity('Passwords do not match!');
-        confirmPassword.nextElementSibling.textContent =
-          'Passwords do not match!';
-      } else {
-        confirmPassword.setCustomValidity('');
       }
 
       form.classList.add('was-validated');

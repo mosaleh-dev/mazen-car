@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Sign In</title>
+    <title>User Sign Up</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,90 +12,122 @@
       href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/login.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/css/login-and-signup.css" />
     <style></style>
   </head>
 
   <body>
-    <section class="big-container">
-      <section class="big-container-dash">
-        <section class="form-box">
-          <header class="heading">
-            <h1>Sign In</h1>
-            <p class="mt-2">Access Your Premium Car Rentals Account.</p>
-          </header>
-          <main class="mt-sm-2">
-            <div class="hr-wrapper">
+    <div
+      class="container-fluid container-wrapper d-flex justify-content-center align-items-center"
+    >
+      <div class="row g-4 align-items-stretch">
+        <div class="col-12 col-md-6">
+          <div class="form-box h-100">
+            <div class="hr-wrapper mt-0">
               <hr class="hr-line" />
-              <span class="hr-text">Your Credentials Please</span>
+              <span class="hr-text">Sign In</span>
               <hr class="hr-line" />
             </div>
+
             <form
-              class="needs-validation"
               id="login-form"
+              class="needs-validation"
               novalidate
-              action=""
-              method="get"
+              method="post"
             >
-              <div class="row">
-                <div class="col-12 mb-3">
-                  <label for="email" class="form-label">Email:</label>
-                  <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    pattern="[a-z0-9._%+\-]+@gmail\.com$"
-                    class="form-control"
-                    placeholder="example@gmail.com"
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    Please enter a valid Gmail address.
-                  </div>
+              <div class="mb-3">
+                <label for="email" class="form-label fw-bold">Email:</label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  pattern="[a-z0-9._%+\-]+@gmail\.com$"
+                  class="form-control"
+                  placeholder="example@gmail.com"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please enter a valid Gmail address.
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-md-12 mb-3">
-                  <label for="password" class="form-label">Password:</label>
-                  <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    class="form-control"
-                    placeholder="At least 8 characters"
-                    pattern=".{8,}"
-                    title="Eight or more characters"
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    Please provide a valid password (at least 8 characters).
-                  </div>
+              <div class="mb-3">
+                <label for="password" class="form-label fw-bold"
+                  >Password:</label
+                >
+                <input
+                  id="password"
+                  type="password"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  pattern=".{8,}"
+                  title="Eight or more characters"
+                  required
+                />
+                <div class="invalid-feedback">
+                  At least 8 characters required.
                 </div>
               </div>
 
               <div
-                class="d-flex justify-content-start align-content-center align-items-center"
+                class="d-flex justify-content-between align-items-center mb-3"
               >
-                <button type="submit" class="doclick btn btn-primary">
-                  Sign In
-                </button>
-                <a
-                  href="UserData.html"
-                  class="link-offset-2 link-underline link-underline-opacity-0 mx-2"
+                <a href="#" class="small text-decoration-none"
+                  >Forgot password?</a
+                >
+                <a href="signup.html" class="small text-decoration-none"
                   >Don't have an account? Register</a
                 >
               </div>
+              <div class="d-flex justify-content-center">
+                <button
+                  type="submit"
+                  class="doclick btn btn-primary px-4 py-2 text-center rounded-5 shadow w-50"
+                >
+                  Sign In
+                </button>
+              </div>
             </form>
-          </main>
-        </section>
-        <section class="d-flex justify-content-center form-control handsOfImg">
-          <img class="w-100" src="./Img/20945933.jpg" alt="" />
-        </section>
-      </section>
-    </section>
+          </div>
+        </div>
 
-    <!-- <script src="valdiateSignIn.js"></script> -->
+        <div class="col-12 col-md-6">
+          <div
+            class="welcome-box h-100 text-center d-flex flex-column justify-content-center"
+          >
+            <div class="heading">
+              <h1>Welcome Back!</h1>
+              <p class="mt-2">
+                "Access your account to explore premium car rentals."
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Similique cupiditate ratione doloremque iure rerum tenetur
+                eligendi, omnis, praesentium consequuntur nihil corporis dolorem
+                sapiente vitae aut numquam assumenda quaerat perspiciatis totam!
+              </p>
+            </div>
+            <div class="hr-wrapper">
+              <hr class="hr-line" />
+              <span class="hr-text">or</span>
+              <hr class="hr-line" />
+            </div>
+            <div class="icons">
+              <i class="fa-brands fa-google"></i>
+              <i class="fa-brands fa-linkedin"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/js/pages/login.js"></script>
   </body>
 </html>
