@@ -232,6 +232,28 @@ export function formatDateTime(dateTimeInput) {
 }
 
 /**
+ * Formats a number as currency (e.g., USD).
+ * @param {number} amount The amount to format.
+ * @returns {string} Formatted currency string.
+ */
+export function formatCurrency(amount) {
+  if (typeof amount !== 'number' || isNaN(amount)) {
+    return '0.00';
+  }
+  return amount.toFixed(2);
+}
+
+/**
+ * Basic form validation using Bootstrap's built-in classes.
+ * @param {HTMLFormElement} formElement The form to validate.
+ * @returns {boolean} True if the form is valid, false otherwise.
+ */
+export function validateForm(formElement) {
+  formElement.classList.add('was-validated');
+  return formElement.checkValidity();
+}
+
+/**
  * Resets Bootstrap validation classes on a form.
  * @param {HTMLFormElement} formElement The form to reset.
  */
