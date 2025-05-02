@@ -1,29 +1,37 @@
 import { isLoggedIn } from './auth.js';
-import pb from './pocketbase.js';
-import { normalizeFileUrls } from './utils.js';
-export async function getCars() {
-  return (await pb.collection('cars').getFullList()).map(normalizeFileUrls);
+import * as cars from './cars.js';
+import * as bookings from './bookings.js';
+
+export function getCars() {
+  return cars.getCars();
 }
-export async function getCar(id, required = ['*']) {
-  return normalizeFileUrls(
-    await pb.collection('cars').getOne(id, { fields: required.join(',') })
-  );
+
+export function getCar(id, required = ['*']) {
+  const car = cars.getCarById(id);
+  return car;
+}
+
+export async function deleteCar(id) {
+  try {
+    console.log('Attempting to delete car id:', id);
+    const success = cars.deleteCar(id);
+    if (!success) {
+      throw new Error(`Car with ID ${id} not found for deletion.`);
+    }
+    return true;
+  } catch (error) {
+    console.error('Error deleting car:', error);
+    throw error;
+  }
 }
 
 export async function getFeaturedCars(limit = 0) {
-  let featuredCars = [];
-  if (!limit) {
-    featuredCars = await pb.collection('cars').getFullList({
-      filter: 'isFeuterd = true',
-    });
-  } else {
-    featuredCars = (
-      await pb.collection('cars').getList(1, limit, {
-        filter: 'isFeuterd = true',
-      })
-    ).items;
+  const allCars = cars.getCars();
+  let featuredCars = allCars.filter((car) => car.availability === true);
+  if (limit > 0) {
+    featuredCars = featuredCars.slice(0, limit);
   }
-  return featuredCars.map(normalizeFileUrls);
+  return featuredCars;
 }
 
 export async function getBookings() {
@@ -31,13 +39,10 @@ export async function getBookings() {
     throw Error('should be logged in');
   }
   try {
-    const bookings = await pb.collection('bookings').getFullList();
-    return bookings;
+    const bookingsList = bookings.getBookings();
+    return bookingsList;
   } catch (error) {
-    console.error(
-      `Data module - Error fetching bookings for user ${userId}:`,
-      error
-    );
+    console.error(`Data module - Error fetching bookings:`, error);
     return [];
   }
 }

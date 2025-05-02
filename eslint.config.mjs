@@ -1,4 +1,5 @@
 import prettier from 'eslint-plugin-prettier';
+import jsdoc from 'eslint-plugin-jsdoc';
 import eslintRecommended from '@eslint/js';
 
 export default [
@@ -14,6 +15,7 @@ export default [
     },
     plugins: {
       prettier,
+      jsdoc,
     },
     rules: {
       ...eslintRecommended.configs.recommended.rules,

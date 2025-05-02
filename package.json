@@ -31,10 +31,9 @@
     "lint:css": "stylelint --fix \"**/*.css\"",
     "lint": "npm run lint:js && npm run lint:css",
     "format": "prettier --write .",
-    "pocketbase": "node ./scripts/run-pocketbase.js",
     "dev": "vite",
     "start:expose": "node ./scripts/run-expose.js",
-    "start": "concurrently --kill-others-on-fail \"npm:dev\" \"npm:pocketbase\"",
+    "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "prepare": "husky"
