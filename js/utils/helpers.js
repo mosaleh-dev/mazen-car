@@ -114,8 +114,33 @@ export function attachThemeToggler() {
  * @param {string} name The name of the query parameter.
  * @returns {string|null} The value of the parameter or null if not found.
  */
+export function getQueryParam(name) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+}
+
 /**
+ * Sets or updates a query parameter in the current URL without reloading.
+ * Use this carefully, full navigation might be better sometimes.
+ * @param {string} key The key of the query parameter.
+ * @param {string} value The value of the query parameter.
+ */
+export function setQueryParam(key, value) {
+  const url = new URL(window.location);
+  url.searchParams.set(key, value);
+  window.history.pushState({}, '', url);
+}
+
 /**
+ * Removes a query parameter from the current URL without reloading.
+ * @param {string} key The key of the query parameter to remove.
+ */
+export function removeQueryParam(key) {
+  const url = new URL(window.location);
+  url.searchParams.delete(key);
+  window.history.pushState({}, '', url);
+}
+
 /**
  * Shows a Bootstrap toast notification. Adapts text color for dark mode.
  * @param {string} message The message to display.
@@ -176,7 +201,7 @@ export function showToast(message, type = 'info', toastId = 'app-toast') {
 
 export function checkAdminLogin() {
   const isAdminLoggedIn = isAdmin();
-  if (isAdminLoggedIn !== 'true') {
+  if (isAdminLoggedIn !== true) {
     window.location.href = '/login.html?redirect=' + location.href;
   }
 }
