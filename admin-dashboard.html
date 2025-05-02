@@ -3,490 +3,238 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard - Car Rental System</title>
+    <title>Car Rental - Admin Dashboard</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    <link rel="stylesheet" href="/css/admin-dashboard.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/admin.css" />
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <div class="container">
-        <a class="navbar-brand" href="/">Mazen Car Admin</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#adminNav"
-          aria-controls="adminNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="adminNav">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-            <li class="nav-item">
-              <button id="adminLogoutBtn" class="btn btn-danger btn-sm">
-                Logout
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <main class="container my-5 pt-5" id="addminDashboard">
-      <h1 class="mb-4">Admin Dashboard</h1>
-
-      <section id="adminSummary" class="mb-5">
-        <h2 class="mb-3 visually-hidden">Overview</h2>
-        <div class="text-center text-muted" id="summaryLoader">
-          <div class="spinner-border spinner-border-sm" role="status"></div>
-          Loading summary...
-        </div>
-        <div id="summaryContent" class="row g-3">
-          <!-- Summary cards loaded by js here (placeholder) -->
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body text-center">Summary data goes here</div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body text-center">Summary data goes here</div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body text-center">Summary data goes here</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <ul class="nav nav-tabs mb-3" id="adminTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link active"
-            id="manage-cars-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#manage-cars-pane"
-            type="button"
-            role="tab"
-            aria-controls="manage-cars-pane"
-            aria-selected="true"
-          >
-            Manage Cars
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="manage-bookings-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#manage-bookings-pane"
-            type="button"
-            role="tab"
-            aria-controls="manage-bookings-pane"
-            aria-selected="false"
-          >
-            Manage Bookings
-          </button>
-        </li>
-      </ul>
-
-      <div class="tab-content" id="adminTabContent">
-        <div
-          class="tab-pane fade show active"
-          id="manage-cars-pane"
-          role="tabpanel"
-          aria-labelledby="manage-cars-tab"
-          tabindex="0"
-        >
-          <h2 class="mb-3 visually-hidden">Manage Car Listings</h2>
-          <div class="card shadow-sm mb-4">
-            <div
-              class="card-header d-flex justify-content-between align-items-center"
-            >
-              <h5 class="mb-0">Car Fleet</h5>
-              <button id="addCarBtn" class="btn btn-success btn-sm">
-                <i class="fas fa-plus me-1"></i> Add New Car
-              </button>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table
-                  class="table table-striped table-hover caption-top responsive-table"
-                >
-                  <caption>
-                    List of cars
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th>Image</th>
-                      <th>Brand</th>
-                      <th>Model</th>
-                      <th>Year</th>
-                      <th>Type</th>
-                      <th>Transmission</th>
-                      <th>Fuel</th>
-                      <th>Rent/Day</th>
-                      <th>Status</th>
-                      <th>Featured</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-car-list">
-                    <!-- Initial Loading State -->
-                    <tr id="carLoadingRow">
-                      <td colspan="11" class="text-center">
-                        <div
-                          class="spinner-border spinner-border-sm"
-                          role="status"
-                        ></div>
-                        Loading cars...
-                      </td>
-                    </tr>
-                    <tr id="carEmptyRow" style="display: none">
-                      <td colspan="11" class="text-center text-muted">
-                        No cars found. Add one!
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="tab-pane fade"
-          id="manage-bookings-pane"
-          role="tabpanel"
-          aria-labelledby="manage-bookings-tab"
-          tabindex="0"
-        >
-          <h2 class="mb-3 visually-hidden">Manage Bookings</h2>
-          <div class="card shadow-sm">
-            <div class="card-header">All Customer Bookings</div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table
-                  class="table table-striped table-hover caption-top responsive-table"
-                >
-                  <caption>
-                    List of bookings
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th>Booking ID</th>
-                      <th>Car</th>
-                      <th>Customer</th>
-                      <th>Pickup</th>
-                      <th>Drop-off</th>
-                      <th>Booked On</th>
-                      <th>Status Action</th>
-                      <th>Current Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="adminBookingList">
-                    <tr id="bookingLoadingRow">
-                      <td colspan="8" class="text-center">
-                        <div
-                          class="spinner-border spinner-border-sm"
-                          role="status"
-                        ></div>
-                        Loading bookings...
-                      </td>
-                    </tr>
-                    <tr id="bookingEmptyRow" style="display: none">
-                      <td colspan="8" class="text-center text-muted">
-                        No bookings found.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div class="d-flex" id="wrapper">
       <div
-        class="modal fade"
-        id="editCarModal"
-        tabindex="-1"
-        aria-labelledby="editCarModalLabel"
-        aria-hidden="true"
+        class="bg-dark border-right vh-100 d-flex flex-column"
+        id="sidebar-wrapper"
       >
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="editCarModalLabel">Car Details</h5>
+        <!-- Keep sidebar dark -->
+        <div class="sidebar-heading text-white text-center py-4 fs-4">
+          Admin Panel
+        </div>
+        <div class="list-group list-group-flush flex-grow-1">
+          <a
+            href="admin-dashboard.html"
+            class="list-group-item list-group-item-action bg-dark text-white active"
+            ><i class="bi bi-speedometer2 me-2"></i>Dashboard</a
+          >
+          <a
+            href="admin-cars.html"
+            class="list-group-item list-group-item-action bg-dark text-white"
+            ><i class="bi bi-car-front-fill me-2"></i>Manage Cars</a
+          >
+          <a
+            href="admin-bookings.html"
+            class="list-group-item list-group-item-action bg-dark text-white"
+            ><i class="bi bi-calendar-check me-2"></i>Manage Bookings</a
+          >
+          <a
+            href="admin-reports.html"
+            class="list-group-item list-group-item-action bg-dark text-white"
+            ><i class="bi bi-bar-chart-line me-2"></i>Reports</a
+          >
+          <!-- <a href="#" class="list-group-item list-group-item-action bg-dark text-white"><i class="bi bi-people-fill me-2"></i>Manage Users</a> -->
+        </div>
+        <div class="list-group list-group-flush">
+          <a
+            href="#"
+            id="logout-button"
+            class="list-group-item list-group-item-action bg-dark text-danger"
+            ><i class="bi bi-box-arrow-left me-2"></i>Logout</a
+          >
+        </div>
+      </div>
+
+      <div id="page-content-wrapper">
+        <nav
+          class="navbar navbar-expand-lg navbar-light bg-light border-bottom"
+        >
+          <div class="container-fluid">
+            <button class="btn btn-primary d-md-none me-2" id="menu-toggle">
+              <i class="bi bi-list"></i>
+            </button>
+            <h5 class="ms-md-3 mb-0">Dashboard Overview</h5>
+            <div class="ms-auto d-flex align-items-center">
+              <span class="navbar-text me-3"> Welcome, Admin! </span>
               <button
+                class="btn btn-outline-secondary btn-sm"
+                id="theme-toggler"
                 type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form
-                id="editCarForm"
-                class="row g-3 needs-validation"
-                novalidate
               >
-                <input type="hidden" id="editCarId" name="id" />
-
-                <div class="col-md-4">
-                  <label for="editCarBrand" class="form-label"
-                    >Brand <span class="text-danger">*</span></label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="editCarBrand"
-                    name="brand"
-                    required
-                  />
-                  <div class="invalid-feedback">Brand is required.</div>
-                </div>
-                <div class="col-md-4">
-                  <label for="editCarModel" class="form-label"
-                    >Model <span class="text-danger">*</span></label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="editCarModel"
-                    name="model"
-                    required
-                  />
-                  <div class="invalid-feedback">Model is required.</div>
-                </div>
-                <div class="col-md-4">
-                  <label for="editCarYear" class="form-label"
-                    >Year <span class="text-danger">*</span></label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="editCarYear"
-                    name="year"
-                    required
-                    min="1990"
-                    max="2027"
-                    step="1"
-                  />
-                  <div class="invalid-feedback">
-                    Please enter a valid year (1990-2027).
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <label for="editCarType" class="form-label">Type</label>
-                  <select id="editCarType" name="type" class="form-select">
-                    <option value="">Choose...</option>
-                    <option value="Sedan">Sedan</option>
-                    <option value="SUV">SUV</option>
-                    <option value="Sport">Sport</option>
-                    <option value="Electric">Electric</option>
-                    <option value="Truck">Truck</option>
-                    <option value="Van">Van</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="editCarTransmission" class="form-label"
-                    >Transmission <span class="text-danger">*</span></label
-                  >
-                  <select
-                    id="editCarTransmission"
-                    name="transmission"
-                    class="form-select"
-                    required
-                  >
-                    <option selected disabled value="">Choose...</option>
-                    <option value="manual">Manual</option>
-                    <option value="automatic">Automatic</option>
-                  </select>
-                  <div class="invalid-feedback">
-                    Transmission type is required.
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <label for="editCarFuel" class="form-label"
-                    >Fuel <span class="text-danger">*</span></label
-                  >
-                  <select
-                    id="editCarFuel"
-                    name="fuel"
-                    class="form-select"
-                    required
-                  >
-                    <option selected disabled value="">Choose...</option>
-                    <option value="petrol">Petrol</option>
-                    <option value="gas">Gas</option>
-                    <option value="electric">Electric</option>
-                    <option value="diesel">Diesel</option>
-                    <option value="hybrid">Hybrid</option>
-                  </select>
-                  <div class="invalid-feedback">Fuel type is required.</div>
-                </div>
-
-                <div class="col-md-6">
-                  <label for="editCarRentPerDay" class="form-label"
-                    >Rent Per Day ($) <span class="text-danger">*</span></label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="editCarRentPerDay"
-                    name="rentPerDay"
-                    required
-                    min="1"
-                    step="0.01"
-                  />
-                  <div class="invalid-feedback">
-                    Please enter a valid rent amount (min $1).
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label for="editCarStatus" class="form-label">Status</label>
-                  <select id="editCarStatus" name="status" class="form-select">
-                    <option value="Available">Available</option>
-                    <option value="In Maintenance">In Maintenance</option>
-                    <option value="Out of Service">Out of Service</option>
-                  </select>
-                </div>
-
-                <div class="col-12">
-                  <label for="editCarDescription" class="form-label"
-                    >Description <span class="text-danger">*</span></label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="editCarDescription"
-                    name="discription"
-                    rows="3"
-                    required
-                  ></textarea>
-                  <div class="invalid-feedback">Description is required.</div>
-                </div>
-                <div class="col-12">
-                  <label for="editCarNotes" class="form-label">Notes</label>
-                  <textarea
-                    class="form-control"
-                    id="editCarNotes"
-                    name="notes"
-                    rows="3"
-                  ></textarea>
-                </div>
-
-                <div class="col-md-6">
-                  <label for="editCarHeroImage" class="form-label"
-                    >Hero Image</label
-                  >
-                  <input
-                    class="form-control"
-                    type="file"
-                    id="editCarHeroImage"
-                    name="heroImage"
-                    accept="image/jpeg, image/png, image/webp"
-                  />
-                  <div class="form-text">
-                    Select the main display image. Replaces existing if editing.
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label for="editCarImages" class="form-label"
-                    >Additional Images</label
-                  >
-                  <input
-                    class="form-control"
-                    type="file"
-                    id="editCarImages"
-                    name="images"
-                    multiple
-                    accept="image/jpeg, image/png, image/webp"
-                  />
-                  <div class="form-text">
-                    Select one or more additional images. Replaces existing if
-                    editing.
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div class="form-check form-switch">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="editCarIsFeatured"
-                      name="isFeuterd"
-                      value="true"
-                    />
-                    <label class="form-check-label" for="editCarIsFeatured">
-                      Featured?
-                    </label>
-                    <!-- PocketBase handles boolean: true if value='true', false if field missing/empty -->
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                form="editCarForm"
-                class="btn btn-primary"
-                id="saveCarChangesBtn"
-              >
-                Save Changes
+                <i
+                  class="bi bi-sun-fill theme-icon-active"
+                  data-theme-icon="bi-sun-fill"
+                ></i>
+                <i
+                  class="bi bi-moon-fill d-none"
+                  data-theme-icon="bi-moon-fill"
+                ></i>
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    </main>
+        </nav>
 
-    <footer class="footer mt-auto py-3 bg-light">
-      <div class="container text-center">
-        <span class="text-muted"
-          >© <span id="currentYear"></span> Car Rental Pro. Admin Panel.</span
-        >
-      </div>
-    </footer>
+        <main class="container-fluid p-4">
+          <h1 class="mt-4">Dashboard</h1>
+          <p>Welcome to the Car Rental System Admin Dashboard.</p>
 
-    <div
-      id="toastContainer"
-      class="toast-container position-fixed bottom-0 end-0 p-3"
-      style="z-index: 1100"
-    >
-      <!-- Toasts are appended here by JS -->
+          <div class="row g-4 mb-4">
+            <div class="col-md-4">
+              <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <h5 class="card-title">Total Cars</h5>
+                      <p class="card-text fs-2" id="total-cars-stat">0</p>
+                    </div>
+                    <i
+                      class="bi bi-car-front-fill opacity-50"
+                      style="font-size: 3rem"
+                    ></i>
+                  </div>
+                </div>
+                <div
+                  class="card-footer d-flex align-items-center justify-content-between"
+                >
+                  <a
+                    class="small text-white stretched-link"
+                    href="admin-cars.html"
+                    >View Details</a
+                  >
+                  <div class="small text-white">
+                    <i class="bi bi-chevron-right"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-white bg-success h-100">
+                <div class="card-body">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <h5 class="card-title">Total Bookings</h5>
+                      <p class="card-text fs-2" id="total-bookings-stat">0</p>
+                    </div>
+                    <i
+                      class="bi bi-calendar-check opacity-50"
+                      style="font-size: 3rem"
+                    ></i>
+                  </div>
+                </div>
+                <div
+                  class="card-footer d-flex align-items-center justify-content-between"
+                >
+                  <a
+                    class="small text-white stretched-link"
+                    href="admin-bookings.html"
+                    >View Details</a
+                  >
+                  <div class="small text-white">
+                    <i class="bi bi-chevron-right"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-white bg-warning h-100">
+                <div class="card-body text-dark">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <h5 class="card-title">Pending Bookings</h5>
+                      <p class="card-text fs-2" id="pending-bookings-stat">0</p>
+                    </div>
+                    <i
+                      class="bi bi-hourglass-split opacity-50"
+                      style="font-size: 3rem"
+                    ></i>
+                  </div>
+                </div>
+                <div
+                  class="card-footer d-flex align-items-center justify-content-between"
+                >
+                  <a
+                    class="small text-dark stretched-link"
+                    href="admin-bookings.html?status=pending"
+                    >View Details</a
+                  >
+                  <div class="small text-dark">
+                    <i class="bi bi-chevron-right"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-header">Quick Actions</div>
+                <div class="card-body">
+                  <a
+                    href="admin-cars.html#add-car-modal"
+                    class="btn btn-primary mb-2"
+                    ><i class="bi bi-plus-circle me-1"></i> Add New Car</a
+                  >
+                  <a href="admin-bookings.html" class="btn btn-secondary mb-2"
+                    ><i class="bi bi-eye me-1"></i> View All Bookings</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card mb-4">
+                <div class="card-header">System Status (Simulated)</div>
+                <div class="card-body">
+                  <p>
+                    Local Storage: <span class="badge bg-success">Active</span>
+                  </p>
+                  <p>Mock Data: <span class="badge bg-info">Loaded</span></p>
+                  <p>
+                    Current Theme:
+                    <span class="badge bg-secondary" id="current-theme-display"
+                      >Light</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <footer class="bg-light text-muted text-center py-3 mt-auto border-top">
+          <div class="container-fluid">
+            <p class="mb-0">&copy; 2024 Car Rental System. Admin Panel.</p>
+          </div>
+        </footer>
+      </div>
     </div>
 
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    <script type="module" src="/js/pages/admin-dashboard.js"></script>
+    <script type="module" src="js/utils/helpers.js"></script>
+    <script type="module" src="js/pages/admin-dashboard.js"></script>
   </body>
 </html>
