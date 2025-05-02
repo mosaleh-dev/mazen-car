@@ -2,6 +2,8 @@
  * Utility functions for the Car Rental System
  */
 
+import { isAdmin, logout } from '../modules/auth';
+
 const THEME_STORAGE_KEY = 'themePreference';
 
 /**
@@ -185,6 +187,50 @@ export function logoutAdmin() {
 }
 
 /**
+ * Formats a date string or Date object into YYYY-MM-DD format.
+ * @param {string|Date} dateInput
+ * @returns {string} Formatted date or empty string if invalid.
+ */
+export function formatDate(dateInput) {
+  if (!dateInput) return '';
+  try {
+    const date = new Date(dateInput);
+    if (isNaN(date.getTime())) return '';
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  } catch (e) {
+    console.error('Error formatting date:', dateInput, e);
+    return '';
+  }
+}
+
+/**
+ * Formats a date string or Date object into YYYY-MM-DD HH:MM format.
+ * @param {string|Date} dateTimeInput
+ * @returns {string} Formatted date and time or empty string if invalid.
+ */
+export function formatDateTime(dateTimeInput) {
+  if (!dateTimeInput) return '';
+  try {
+    const date = new Date(dateTimeInput);
+    if (isNaN(date.getTime())) return '';
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  } catch (e) {
+    console.error('Error formatting date/time:', dateTimeInput, e);
+    return '';
+  }
+}
+
 /**
  * Resets Bootstrap validation classes on a form.
  * @param {HTMLFormElement} formElement The form to reset.
