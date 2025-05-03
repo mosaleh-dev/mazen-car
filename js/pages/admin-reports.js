@@ -7,6 +7,9 @@ import { getCars } from '../modules/cars.js';
 import { getBookings } from '../modules/bookings.js';
 import { getUsers as getAllUsers } from '../modules/users.js';
 
+let statusChartInstance = null;
+let typeChartInstance = null;
+
 document.addEventListener('DOMContentLoaded', () => {
   checkAdminLogin();
   setupAdminLayoutListeners();
@@ -19,45 +22,29 @@ function generateReports() {
     const bookings = getBookings();
     const users = getAllUsers();
 
+    // --- Booking Status ---
     const statusCounts = bookings.reduce((acc, booking) => {
       const status = booking.status || 'unknown';
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {});
 
-    document.getElementById('report-confirmed-count').textContent =
-      statusCounts.confirmed || 0;
-    document.getElementById('report-pending-count').textContent =
-      statusCounts.pending || 0;
-    document.getElementById('report-cancelled-count').textContent =
-      statusCounts.cancelled || 0;
-    document.getElementById('report-total-bookings').textContent =
-      bookings.length;
+    const totalBookings = bookings.length;
+    document.getElementById('report-total-bookings-badge').textContent =
+      `Total: ${totalBookings}`;
+    renderBookingStatusChart(statusCounts);
 
+    // --- Car Types ---
     const typeCounts = cars.reduce((acc, car) => {
       const type = car.type || 'Unknown';
       acc[type] = (acc[type] || 0) + 1;
       return acc;
     }, {});
 
-    const carTypesList = document.getElementById('report-car-types-list');
-    carTypesList.innerHTML = '';
-    if (Object.keys(typeCounts).length > 0) {
-      Object.entries(typeCounts)
-        .sort()
-        .forEach(([type, count]) => {
-          const listItem = `
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        ${type}
-                        <span class="badge bg-primary rounded-pill">${count}</span>
-                    </li>`;
-          carTypesList.insertAdjacentHTML('beforeend', listItem);
-        });
-    } else {
-      carTypesList.innerHTML =
-        '<li class="list-group-item text-center">No car types found.</li>';
-    }
-    document.getElementById('report-total-cars').textContent = cars.length;
+    const totalCars = cars.length;
+    document.getElementById('report-total-cars-badge').textContent =
+      `Total: ${totalCars}`;
+    renderCarTypesChart(typeCounts);
 
     // --- General Stats ---
     const now = new Date();
@@ -107,7 +94,6 @@ function generateReports() {
         : 'N/A';
     document.getElementById('report-avg-duration').textContent = avgDuration;
 
-    // Most popular car type based on *bookings*
     const bookedCarTypeCounts = bookings.reduce((acc, booking) => {
       const carType = booking.carDetails?.type;
       if (carType) {
@@ -118,11 +104,17 @@ function generateReports() {
 
     let popularType = 'N/A';
     let maxBookings = 0;
-    for (const [type, count] of Object.entries(bookedCarTypeCounts)) {
-      if (count > maxBookings) {
-        maxBookings = count;
-        popularType = type;
-      }
+    if (Object.keys(bookedCarTypeCounts).length > 0) {
+      popularType = Object.entries(bookedCarTypeCounts).reduce(
+        (popular, [type, count]) => {
+          if (count > maxBookings) {
+            maxBookings = count;
+            return type;
+          }
+          return popular;
+        },
+        Object.keys(bookedCarTypeCounts)[0]
+      );
     }
     document.getElementById('report-popular-type').textContent = popularType;
 
@@ -135,18 +127,110 @@ function generateReports() {
   } catch (error) {
     console.error('Error generating reports:', error);
     showToast('Could not generate reports.', 'error', 'admin-toast');
-    // Set all report fields to 'Err' on failure
-    document.getElementById('report-confirmed-count').textContent = 'Err';
-    document.getElementById('report-pending-count').textContent = 'Err';
-    document.getElementById('report-cancelled-count').textContent = 'Err';
-    document.getElementById('report-total-bookings').textContent = 'Err';
-    document.getElementById('report-car-types-list').innerHTML =
-      '<li class="list-group-item text-danger">Error loading data</li>';
-    document.getElementById('report-total-cars').textContent = 'Err';
+    document.getElementById('report-total-bookings-badge').textContent =
+      `Total: Err`;
+    document.getElementById('report-total-cars-badge').textContent =
+      `Total: Err`;
     document.getElementById('report-bookings-this-month').textContent = 'Err';
     document.getElementById('report-avg-duration').textContent = 'Err';
     document.getElementById('report-popular-type').textContent = 'Err';
     document.getElementById('report-total-users').textContent = 'Err';
     document.getElementById('report-verified-users').textContent = 'Err';
   }
+}
+
+function renderBookingStatusChart(statusCounts) {
+  const ctx = document.getElementById('bookingsStatusChart')?.getContext('2d');
+  if (!ctx) return;
+
+  // Destroy previous chart instance if it exists
+  if (statusChartInstance) {
+    statusChartInstance.destroy();
+  }
+
+  const labels = ['Confirmed', 'Pending', 'Cancelled', 'Unknown'];
+  const data = [
+    statusCounts.confirmed || 0,
+    statusCounts.pending || 0,
+    statusCounts.cancelled || 0,
+    statusCounts.unknown || 0,
+  ];
+  const backgroundColors = ['#198754', '#ffc107', '#dc3545', '#6c757d'];
+
+  statusChartInstance = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Booking Status',
+          data: data,
+          backgroundColor: backgroundColors,
+          hoverOffset: 4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+        },
+        title: {
+          display: false,
+        },
+      },
+    },
+  });
+}
+
+function renderCarTypesChart(typeCounts) {
+  const ctx = document.getElementById('carTypesChart')?.getContext('2d');
+  if (!ctx) return;
+
+  if (typeChartInstance) {
+    typeChartInstance.destroy();
+  }
+
+  const sortedTypes = Object.entries(typeCounts).sort(([, a], [, b]) => b - a); // Sort by count desc
+  const labels = sortedTypes.map(([type]) => type);
+  const data = sortedTypes.map(([, count]) => count);
+
+  typeChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Number of Cars',
+          data: data,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: false,
+        },
+      },
+    },
+  });
 }

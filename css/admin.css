@@ -159,3 +159,8 @@
 .form-switch .form-check-input {
   cursor: pointer;
 }
+
+.card-body canvas {
+  max-width: 100%;
+  max-height: 400px;
+}
