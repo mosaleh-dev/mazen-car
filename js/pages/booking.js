@@ -14,6 +14,7 @@ import {
 let currentCar = null;
 let carRentPerDay = 0;
 let carId = null;
+
 let bookedDates = [];
 let disabledDates = [];
 let fp = null;
@@ -22,8 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   attachThemeToggler();
 
   const bookingForm = document.getElementById('booking-form');
-  const pickupDateInput = document.getElementById('pickupDate');
-  const dropoffDateInput = document.getElementById('dropoffDate');
   carId = getQueryParam('carId');
 
   if (!carId) {
@@ -57,26 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
       input.addEventListener('change', updateBookingSummary);
     });
 
-  if (pickupDateInput) {
-    pickupDateInput.min = formatDate(new Date());
-  }
-  if (pickupDateInput && dropoffDateInput) {
-    pickupDateInput.addEventListener('change', () => {
-      dropoffDateInput.min = pickupDateInput.value;
-      if (
-        dropoffDateInput.value &&
-        dropoffDateInput.value < pickupDateInput.value
-      ) {
-        dropoffDateInput.value = '';
-      }
-      updateBookingSummary();
-    });
-  }
-
   if (bookingForm) {
     bookingForm.addEventListener('submit', handleBookingSubmit);
   }
 
+  // Load bookedDates for this carId
   bookedDates = JSON.parse(localStorage.getItem(`bookedDates${carId}`)) || [];
   disabledDates = [];
   bookedDates.forEach((range) => {
@@ -85,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ...getDatesBetween(range.from, range.to),
     ];
   });
+
   // Initialize Flatpickr
   fp = flatpickr('#date-range', {
     mode: 'range',
@@ -96,12 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
     static: true,
     onClose: function (selectedDates, dateStr, instance) {
       if (selectedDates.length === 2) {
-        console.log(
-          'Selected range:',
-          selectedDates[0],
-          'to',
-          selectedDates[1]
-        );
         instance.element.dispatchEvent(new Event('change'));
         const altInput = instance.altInput;
       }
@@ -194,6 +173,7 @@ function handleBookingSubmit(event) {
     showToast('Cannot book unavailable car.', 'error', 'booking-toast');
     return;
   }
+
   if (!validateForm(form)) {
     showToast(
       'Please fill in all required fields correctly.',
@@ -209,18 +189,6 @@ function handleBookingSubmit(event) {
   const dropoffTime = document.getElementById('dropoffTime').value;
   const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
   const dropoffDateTime = new Date(`${dropoffDate}T${dropoffTime}`);
-
-  if (dropoffDateTime <= pickupDateTime) {
-    showToast(
-      'Drop-off date/time must be after pickup date/time.',
-      'error',
-      'booking-toast'
-    );
-    document.getElementById('dropoffDate').classList.add('is-invalid');
-    document.getElementById('dropoffDate').focus();
-    return;
-  }
-
   const durationMillis = dropoffDateTime - pickupDateTime;
   const durationDays = Math.max(
     1,
@@ -240,7 +208,6 @@ function handleBookingSubmit(event) {
 
   try {
     const newBooking = addBooking(bookingData);
-    console.log('Booking added:', newBooking);
     displayConfirmation(newBooking);
     resetFormValidation(form);
     form.reset();
@@ -291,9 +258,9 @@ function displayError(message) {
 }
 
 function getDatesBetween(startDate, endDate) {
-  let dates = [];
+  const dates = [];
   let currentDate = new Date(startDate);
-  let lastDate = new Date(endDate);
+  const lastDate = new Date(endDate);
   while (currentDate <= lastDate) {
     dates.push(new Date(currentDate).toISOString().split('T')[0]);
     currentDate.setDate(currentDate.getDate() + 1);
@@ -316,13 +283,14 @@ function bookDates() {
     startDate > endDate
   ) {
     console.error('Invalid date range:', { startDate, endDate });
+    alert('Invalid date range selected.');
     return;
   }
 
-  let formatDateToString = (date) => {
-    let year = date.getFullYear();
-    let month = String(date.getMonth() + 1).padStart(2, '0');
-    let day = String(date.getDate()).padStart(2, '0');
+  const formatDateToString = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
 
@@ -330,6 +298,7 @@ function bookDates() {
     from: formatDateToString(startDate),
     to: formatDateToString(endDate),
   };
+
   bookedDates.push(newBooking);
   localStorage.setItem(`bookedDates${carId}`, JSON.stringify(bookedDates));
   disabledDates = [
