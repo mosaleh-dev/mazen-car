@@ -1,0 +1,74 @@
+body {
+  font-family: sans-serif;
+  background-color: #f8f9fa;
+}
+
+.hero-section {
+  background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1920');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.contact-info li {
+  font-size: 1.1rem;
+}
+
+.contact-info a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+.team-img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.team-card {
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.team-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
+}
+
+.team-card .card-body {
+  text-align: center;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+.footer {
+  background-color: #343a40;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+iframe {
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+  width: 100%;
+  max-width: 100%;
+}
