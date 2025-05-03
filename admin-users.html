@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Car Rental - Manage Bookings</title>
+    <title>Car Rental - Manage Users</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -39,12 +39,12 @@
           >
           <a
             href="admin-bookings.html"
-            class="list-group-item list-group-item-action bg-dark text-white active"
+            class="list-group-item list-group-item-action bg-dark text-white"
             ><i class="bi bi-calendar-check me-2"></i>Manage Bookings</a
           >
           <a
             href="admin-users.html"
-            class="list-group-item list-group-item-action bg-dark text-white"
+            class="list-group-item list-group-item-action bg-dark text-white active"
             ><i class="bi bi-people-fill me-2"></i>Manage Users</a
           >
           <a
@@ -62,7 +62,6 @@
           >
         </div>
       </div>
-
       <div id="page-content-wrapper">
         <nav
           class="navbar navbar-expand-lg navbar-light bg-light border-bottom"
@@ -71,7 +70,7 @@
             <button class="btn btn-primary d-md-none me-2" id="menu-toggle">
               <i class="bi bi-list"></i>
             </button>
-            <h5 class="ms-md-3 mb-0">Manage Bookings</h5>
+            <h5 class="ms-md-3 mb-0">Manage Users</h5>
             <div class="ms-auto d-flex align-items-center">
               <span class="navbar-text me-3"> Admin </span>
               <button
@@ -93,82 +92,39 @@
         </nav>
 
         <main class="container-fluid p-4">
-          <h1 class="mt-4 mb-3">Booking Management</h1>
-
-          <div class="card mb-4">
-            <div class="card-header">Filter Bookings</div>
-            <div class="card-body">
-              <form id="booking-filter-form" class="row g-3 align-items-end">
-                <div class="col-md-4">
-                  <label for="filterBookingStatus" class="form-label"
-                    >Status</label
-                  >
-                  <select id="filterBookingStatus" class="form-select">
-                    <option value="">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="filterBookingDate" class="form-label"
-                    >Pickup Date</label
-                  >
-                  <input
-                    type="date"
-                    id="filterBookingDate"
-                    class="form-control"
-                  />
-                </div>
-                <div class="col-md-2">
-                  <button type="submit" class="btn btn-primary w-100">
-                    Filter
-                  </button>
-                </div>
-                <div class="col-md-2">
-                  <button
-                    type="reset"
-                    id="reset-booking-filters"
-                    class="btn btn-outline-secondary w-100"
-                  >
-                    Reset
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <h1 class="mt-4 mb-3">User Management</h1>
 
           <div class="card">
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover align-middle">
                   <thead>
                     <tr>
-                      <th>Booking ID</th>
-                      <th>Customer</th>
-                      <th>Car (ID)</th>
-                      <th>Pickup</th>
-                      <th>Drop-off</th>
-                      <th>Total Cost ($)</th>
-                      <th>Status</th>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th class="text-center">Verified</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
-                  <tbody id="bookings-table-body">
+                  <tbody id="users-table-body">
                     <tr>
-                      <td colspan="8" class="text-center">
-                        Loading booking data...
+                      <td colspan="6" class="text-center">
+                        Loading user data...
                       </td>
                     </tr>
+                    <!-- User rows loaded by JS -->
                   </tbody>
                 </table>
               </div>
-              <div id="no-bookings-message" class="alert alert-info d-none">
-                No bookings found matching the criteria.
+              <div id="no-users-message" class="alert alert-info d-none">
+                No users found in the system.
               </div>
             </div>
           </div>
         </main>
+
         <footer class="bg-light text-muted text-center py-3 mt-auto border-top">
           <div class="container-fluid">
             <p class="mb-0">© 2024 Car Rental System. Admin Panel.</p>
@@ -178,16 +134,117 @@
     </div>
     <div
       class="modal fade"
-      id="statusChangeModal"
+      id="userFormModal"
       tabindex="-1"
-      aria-labelledby="statusChangeModalLabel"
+      aria-labelledby="userFormModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form id="user-form" class="needs-validation" novalidate>
+            <div class="modal-header">
+              <h5 class="modal-title" id="userFormModalLabel">Edit User</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="userId" />
+              <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                  <label for="userFirstName" class="form-label"
+                    >First Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="userFirstName"
+                    required
+                  />
+                  <div class="invalid-feedback">First name is required.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="userLastName" class="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="userLastName"
+                    required
+                  />
+                  <div class="invalid-feedback">Last name is required.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="userEmail" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="userEmail"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid email.
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="userPhone" class="form-label">Phone</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="userPhone"
+                    pattern="^\+?[0-9\s\-()]*$"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Please provide a valid phone number.
+                  </div>
+                </div>
+                <div class="col-12 mb-3">
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="userVerified"
+                    />
+                    <label class="form-check-label" for="userVerified"
+                      >User Verified</label
+                    >
+                  </div>
+                </div>
+                <!-- Note: Password and National ID are intentionally omitted from edit form for security/simplicity -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary" id="saveUserButton">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="deleteUserConfirmModal"
+      tabindex="-1"
+      aria-labelledby="deleteUserConfirmModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="statusChangeModalLabel">
-              Change Booking Status
+            <h5 class="modal-title" id="deleteUserConfirmModalLabel">
+              Confirm Deletion
             </h5>
             <button
               type="button"
@@ -197,23 +254,15 @@
             ></button>
           </div>
           <div class="modal-body">
-            <p>
-              Change status for Booking ID:
-              <strong id="statusChangeBookingId"></strong>
-            </p>
-            <p>Car: <span id="statusChangeCarInfo"></span></p>
-            <p>Customer: <span id="statusChangeCustomerInfo"></span></p>
-            <div class="mb-3">
-              <label for="newBookingStatus" class="form-label"
-                >New Status</label
+            Are you sure you want to delete this user? This action cannot be
+            undone.
+            <p><strong>User:</strong> <span id="deleteUserInfo"></span></p>
+            <p class="text-danger">
+              <small
+                >Deleting the user will also remove their association with past
+                bookings (though booking records might remain).</small
               >
-              <select id="newBookingStatus" class="form-select">
-                <!-- Select adapts -->
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-            </div>
+            </p>
           </div>
           <div class="modal-footer">
             <button
@@ -225,16 +274,15 @@
             </button>
             <button
               type="button"
-              class="btn btn-primary"
-              id="confirmStatusChangeButton"
+              class="btn btn-danger"
+              id="confirmDeleteUserButton"
             >
-              Update Status
+              Delete User
             </button>
           </div>
         </div>
       </div>
     </div>
-
     <div
       class="toast-container position-fixed bottom-0 end-0 p-3"
       style="z-index: 11"
@@ -267,6 +315,6 @@
       crossorigin="anonymous"
     ></script>
     <script type="module" src="js/utils/helpers.js"></script>
-    <script type="module" src="js/pages/admin-bookings.js"></script>
+    <script type="module" src="js/pages/admin-users.js"></script>
   </body>
 </html>

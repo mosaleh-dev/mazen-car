@@ -5,6 +5,7 @@ import {
 } from '../utils/helpers.js';
 import { getCars } from '../modules/cars.js';
 import { getBookings } from '../modules/bookings.js';
+import { getUsers as getAllUsers } from '../modules/users.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   checkAdminLogin();
@@ -16,9 +17,10 @@ function generateReports() {
   try {
     const cars = getCars();
     const bookings = getBookings();
+    const users = getAllUsers();
 
     const statusCounts = bookings.reduce((acc, booking) => {
-      const status = booking.status || 'unknown'; // Handle potential undefined status when migrate to backend again
+      const status = booking.status || 'unknown';
       acc[status] = (acc[status] || 0) + 1;
       return acc;
     }, {});
@@ -57,6 +59,7 @@ function generateReports() {
     }
     document.getElementById('report-total-cars').textContent = cars.length;
 
+    // --- General Stats ---
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
@@ -78,8 +81,6 @@ function generateReports() {
     let totalDurationDays = 0;
     let validBookingsForDuration = 0;
     bookings.forEach((b) => {
-      // Only calculate for confirmed/past bookings if desired
-      // if (b.status !== 'confirmed' && new Date(b.pickupDate) > now) return;
       try {
         const pickup = new Date(`${b.pickupDate}T${b.pickupTime}`);
         const dropoff = new Date(`${b.dropoffDate}T${b.dropoffTime}`);
@@ -124,9 +125,17 @@ function generateReports() {
       }
     }
     document.getElementById('report-popular-type').textContent = popularType;
+
+    // --- User Stats ---
+    const totalUsers = users.length;
+    const verifiedUsers = users.filter((user) => user.verified).length;
+    document.getElementById('report-total-users').textContent = totalUsers;
+    document.getElementById('report-verified-users').textContent =
+      verifiedUsers;
   } catch (error) {
     console.error('Error generating reports:', error);
     showToast('Could not generate reports.', 'error', 'admin-toast');
+    // Set all report fields to 'Err' on failure
     document.getElementById('report-confirmed-count').textContent = 'Err';
     document.getElementById('report-pending-count').textContent = 'Err';
     document.getElementById('report-cancelled-count').textContent = 'Err';
@@ -137,5 +146,7 @@ function generateReports() {
     document.getElementById('report-bookings-this-month').textContent = 'Err';
     document.getElementById('report-avg-duration').textContent = 'Err';
     document.getElementById('report-popular-type').textContent = 'Err';
+    document.getElementById('report-total-users').textContent = 'Err';
+    document.getElementById('report-verified-users').textContent = 'Err';
   }
 }
