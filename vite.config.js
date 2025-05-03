@@ -13,6 +13,7 @@ export default defineConfig({
         adminReports: resolve(__dirname, 'admin-reports.html'),
         logIN: resolve(__dirname, 'login.html'),
         signUp: resolve(__dirname, 'signup.html'),
+        car: resolve(__dirname, 'car.html'),
       },
     },
   },

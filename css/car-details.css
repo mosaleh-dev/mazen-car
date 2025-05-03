@@ -1,0 +1,49 @@
+#car-details-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
+}
+
+[data-bs-theme='dark'] #car-details-container img {
+  box-shadow: 0 4px 8px rgb(255 255 255 / 10%);
+}
+
+#car-details-container h1 {
+  font-weight: 300;
+  margin-bottom: 0.5rem;
+}
+
+#car-details-container .lead {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #198754;
+}
+
+[data-bs-theme='dark'] #car-details-container .lead {
+  color: var(--bs-success-text-emphasis);
+}
+
+#car-details-container .features-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+#car-details-container .features-list li::before {
+  content: '\F28A';
+  font-family: bootstrap-icons, sans-serif;
+  margin-right: 8px;
+  color: var(--bs-primary);
+}
+
+[data-bs-theme='dark'] #car-details-container .features-list li::before {
+  color: var(--bs-primary-text-emphasis);
+}
+
+#rental-terms ul {
+  padding-left: 1.5rem;
+}
+
+#rental-terms ul li {
+  margin-bottom: 0.5rem;
+}
