@@ -50,6 +50,11 @@ export function setTheme(theme) {
   if (themeDisplay) {
     themeDisplay.textContent = theme === 'dark' ? 'Dark' : 'Light';
   }
+  // Flatpickr theme toggler
+  const flatpickrDarkTheme = document.getElementById('flatpickr-dark-theme');
+  if (flatpickrDarkTheme) {
+    flatpickrDarkTheme.disabled = theme !== 'dark';
+  }
 }
 
 /**
