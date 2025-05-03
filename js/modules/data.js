@@ -13,7 +13,6 @@ export function getCar(id, required = ['*']) {
 
 export async function deleteCar(id) {
   try {
-    console.log('Attempting to delete car id:', id);
     const success = cars.deleteCar(id);
     if (!success) {
       throw new Error(`Car with ID ${id} not found for deletion.`);

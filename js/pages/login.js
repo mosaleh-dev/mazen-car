@@ -1,32 +1,22 @@
-import {
-  getCurrentUser,
-  isLoggedIn,
-  login,
-  isAdmin,
-  logout,
-} from '../modules/auth.js';
+import { isLoggedIn, login, isAdmin, logout } from '../modules/auth.js';
 
 async function loginFormHandler(event) {
   event.preventDefault();
   logout();
 
-  console.log('form login');
   const formElement = event.target;
   const formData = new FormData(formElement);
   const email = formData.get('email');
   const password = formData.get('password');
   let log = await login(email, password);
-  console.log(log);
 
   if (log.success == true && isAdmin()) {
     location.href = '/admin-dashboard.html';
   } else if (log.success == true && !isAdmin()) {
     location.href = '/';
   } else {
-    console.error('Login failed', isLoggedIn());
+    alert('login failed');
   }
-
-  console.log('current user', getCurrentUser());
 }
 
 const loginForm = document.getElementById('login-form');

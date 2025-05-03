@@ -4,10 +4,10 @@ import {
   getCurrentUser,
   isAdmin,
 } from '../modules/auth.js';
+import { getQueryParam } from '../utils/helpers.js';
 
 async function signupFormHandler(event) {
   event.preventDefault();
-  console.log('Signup form submitted');
 
   const formElement = event.target;
   const formData = new FormData(formElement);
@@ -19,14 +19,6 @@ async function signupFormHandler(event) {
   const email = formData.get('email');
   const password = formData.get('password');
   const passwordConfirm = formData.get('passwordConfirm');
-
-  // التحقق من تكرار الإيميل من localStorage
-  const storedEmails = JSON.parse(localStorage.getItem('emails') || '[]');
-
-  if (storedEmails.includes(email)) {
-    alert('الإيميل ده متسجل بالفعل!');
-    return;
-  }
 
   if (
     firstName &&
@@ -49,11 +41,7 @@ async function signupFormHandler(event) {
 
     console.log('Signup result:', signupResult);
 
-    storedEmails.push(email);
-    localStorage.setItem('emails', JSON.stringify(storedEmails));
-
-    const params = new URLSearchParams(window.location.search);
-    const redirectTo = params.get('redirect');
+    const redirectTo = getQueryParam('redirect');
     const currentPath = window.location.pathname;
 
     if (isLoggedIn()) {
