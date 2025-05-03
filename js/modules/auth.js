@@ -6,7 +6,7 @@ function _initMockUsers() {
       firstName: 'Ahmed',
       lastName: 'Mohamed',
       nationalId: '12345678901234',
-      phone: '01012345678',
+      phoneNumber: '01012345678',
       isAdmin: true,
     },
     {
@@ -15,7 +15,7 @@ function _initMockUsers() {
       firstName: 'Ali',
       lastName: 'Hassan',
       nationalId: '23456789012345',
-      phone: '01023456789',
+      phoneNumber: '01023456789',
       isAdmin: false,
     },
     {
@@ -24,7 +24,7 @@ function _initMockUsers() {
       firstName: 'Mahmoud',
       lastName: 'Ibrahim',
       nationalId: '34567890123456',
-      phone: '01034567890',
+      phoneNumber: '01034567890',
       isAdmin: false,
     },
     {
@@ -33,7 +33,7 @@ function _initMockUsers() {
       firstName: 'Youssef',
       lastName: 'Ahmed',
       nationalId: '45678901234567',
-      phone: '01045678901',
+      phoneNumber: '01045678901',
       isAdmin: false,
     },
     {
@@ -42,7 +42,7 @@ function _initMockUsers() {
       firstName: 'Ibrahim',
       lastName: 'Ali',
       nationalId: '56789012345678',
-      phone: '01056789012',
+      phoneNumber: '01056789012',
       isAdmin: false,
     },
     {
@@ -51,7 +51,7 @@ function _initMockUsers() {
       firstName: 'Khaled',
       lastName: 'Mahmoud',
       nationalId: '67890123456789',
-      phone: '01067890123',
+      phoneNumber: '01067890123',
       isAdmin: false,
     },
   ];
@@ -86,7 +86,7 @@ export async function login(email, password) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       return { success: true, isAdmin: user.isAdmin };
     } else {
-      throw new Error('Invalid email or password');
+      return { success: false, isAdmin: false };
     }
   } catch (error) {
     return { success: false, error: error.message };
@@ -95,21 +95,21 @@ export async function login(email, password) {
 
 export async function signup(data) {
   try {
-    const { email, password, confirmPassword, phone } = data;
-    if (!email || !password || !confirmPassword || !phone) {
+    const { email, password, passwordConfirm, phoneNumber } = data;
+    if (!email || !password || !passwordConfirm || !phoneNumber) {
       throw new Error(
-        'Email, password, confirm password, and phone are required.'
+        'Email, password, confirm password, and phoneNumber are required.'
       );
     }
-    if (password !== confirmPassword) {
+    if (password !== passwordConfirm) {
       throw new Error('Password and confirm password do not match.');
     }
     const users = _getUsers();
     const isEmailOrPhoneUsed = users.some(
-      (user) => user.email === email || user.phone === phone
+      (user) => user.email === email || user.phoneNumber === phoneNumber
     );
     if (isEmailOrPhoneUsed) {
-      throw new Error('Email or phone is already used.');
+      throw new Error('Email or phoneNumber is already used.');
     }
     users.push(data);
     _saveUsers(users);
