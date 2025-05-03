@@ -10,6 +10,7 @@ export default defineConfig({
         adminDashboard: resolve(__dirname, 'admin-dashboard.html'),
         adminCars: resolve(__dirname, 'admin-cars.html'),
         adminBookings: resolve(__dirname, 'admin-bookings.html'),
+        adminUsers: resolve(__dirname, 'admin-users.html'),
         adminReports: resolve(__dirname, 'admin-reports.html'),
         logIN: resolve(__dirname, 'login.html'),
         signUp: resolve(__dirname, 'signup.html'),
