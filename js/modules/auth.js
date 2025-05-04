@@ -106,7 +106,7 @@ export function logout() {
   localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
   // Redirect only if currently on an admin page after logout
   if (window.location.pathname.startsWith('/admin-')) {
-    window.location.href = '/'; // Redirect to home or login page
+    window.location.href = '/';
   }
 }
 

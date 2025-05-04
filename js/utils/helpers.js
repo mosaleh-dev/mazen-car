@@ -85,7 +85,7 @@ function updateTogglerIcons(theme) {
 /**
  * Initializes the theme when the script loads.
  */
-(function initTheme() {
+function initTheme() {
   setTheme(getPreferredTheme());
 
   // Optional: Listen for system theme changes
@@ -98,19 +98,23 @@ function updateTogglerIcons(theme) {
         setTheme(getPreferredTheme());
       }
     });
-})();
+}
 
 /**
- * Attaches event listener to the theme toggler button.
- * Call this after the DOM is loaded.
+ * Attaches event listener to the theme toggler button(s).
+ * Call this after the DOM is loaded where a toggler exists.
  */
 export function attachThemeToggler() {
+  initTheme();
   document.querySelectorAll('#theme-toggler').forEach((toggler) => {
-    toggler.addEventListener('click', () => {
-      const currentTheme =
-        document.documentElement.getAttribute('data-bs-theme');
-      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-    });
+    if (!toggler.dataset.themeListenerAttached) {
+      toggler.addEventListener('click', () => {
+        const currentTheme =
+          document.documentElement.getAttribute('data-bs-theme');
+        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+      });
+      toggler.dataset.themeListenerAttached = 'true';
+    }
   });
 }
 
@@ -196,24 +200,38 @@ export function showToast(message, type = 'info', toastId = 'app-toast') {
       break;
   }
 
+  const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+  if (currentTheme === 'dark') {
+    if (bgClass === 'bg-warning' || bgClass === 'bg-info') {
+      // In dark mode, light text might be better on warning/info backgrounds
+      // textClass = 'text-white';
+    }
+  } else {
+    // In light mode, ensure dark text on warning/info
+    if (bgClass === 'bg-warning' || bgClass === 'bg-info') {
+      textClass = 'text-dark';
+    }
+  }
+
   toastEl.classList.add(bgClass, textClass);
   toastHeader.classList.add(textClass);
 
   toastBody.textContent = message;
-  const toastInstance = new bootstrap.Toast(toastEl);
+  const toastInstance = bootstrap.Toast.getOrCreateInstance(toastEl);
   toastInstance.show();
 }
 
 export function checkAdminLogin() {
   const isAdminLoggedIn = isAdmin();
   if (isAdminLoggedIn !== true) {
-    window.location.href = '/login.html?redirect=' + location.href;
+    setQueryParam('redirect', value);
+    window.location.href = '/login.html';
   }
 }
 
 export function logoutAdmin() {
   logout();
-  window.location.href = '/';
+  window.location.href = '/login.html';
 }
 
 /**
@@ -225,11 +243,15 @@ export function formatDate(dateInput) {
   if (!dateInput) return '';
   try {
     const date = new Date(dateInput);
-    if (isNaN(date.getTime())) return '';
+    // Adjust for potential timezone offset if the input is just a date string
+    const adjustedDate = new Date(
+      date.getTime() + date.getTimezoneOffset() * 60000
+    );
+    if (isNaN(adjustedDate.getTime())) return '';
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const year = adjustedDate.getFullYear();
+    const month = String(adjustedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(adjustedDate.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   } catch (e) {
     console.error('Error formatting date:', dateInput, e);
@@ -238,7 +260,8 @@ export function formatDate(dateInput) {
 }
 
 /**
- * Formats a date string or Date object into YYYY-MM-DD HH:MM format.
+ * Formats a date string or Date object into a locale-aware date and time string.
+ * Example: "Sep 10, 2024, 10:00 AM"
  * @param {string|Date} dateTimeInput
  * @returns {string} Formatted date and time or empty string if invalid.
  */
@@ -248,13 +271,15 @@ export function formatDateTime(dateTimeInput) {
     const date = new Date(dateTimeInput);
     if (isNaN(date.getTime())) return '';
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    return date.toLocaleString(undefined, {
+      // Use browser's default locale
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true, // Use AM/PM
+    });
   } catch (e) {
     console.error('Error formatting date/time:', dateTimeInput, e);
     return '';
@@ -275,6 +300,7 @@ export function formatCurrency(amount) {
 
 /**
  * Basic form validation using Bootstrap's built-in classes.
+ * Adds 'was-validated' class and returns checkValidity result.
  * @param {HTMLFormElement} formElement The form to validate.
  * @returns {boolean} True if the form is valid, false otherwise.
  */
@@ -284,13 +310,17 @@ export function validateForm(formElement) {
 }
 
 /**
- * Resets Bootstrap validation classes on a form.
+ * Resets Bootstrap validation classes and any custom error messages on a form.
  * @param {HTMLFormElement} formElement The form to reset.
  */
 export function resetFormValidation(formElement) {
   formElement.classList.remove('was-validated');
   formElement.querySelectorAll('.is-invalid, .is-valid').forEach((el) => {
     el.classList.remove('is-invalid', 'is-valid');
+  });
+  // Optional: Clear custom error messages if you add any dynamically
+  formElement.querySelectorAll('.custom-error-message').forEach((el) => {
+    el.textContent = ''; // Or el.remove()
   });
 }
 
@@ -313,15 +343,23 @@ export function setupAdminLayoutListeners() {
   const logoutButton = document.getElementById('logout-button');
 
   if (menuToggle) {
-    menuToggle.addEventListener('click', toggleSidebar);
+    // Ensure listener isn't attached multiple times
+    if (!menuToggle.dataset.toggleListenerAttached) {
+      menuToggle.addEventListener('click', toggleSidebar);
+      menuToggle.dataset.toggleListenerAttached = 'true';
+    }
   }
 
   if (logoutButton) {
-    logoutButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      logoutAdmin();
-    });
+    // Ensure listener isn't attached multiple times
+    if (!logoutButton.dataset.logoutListenerAttached) {
+      logoutButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutAdmin();
+      });
+      logoutButton.dataset.logoutListenerAttached = 'true';
+    }
   }
 
-  attachThemeToggler();
+  attachThemeToggler(); // Ensure theme toggler works on admin pages
 }
