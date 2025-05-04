@@ -1,0 +1,16 @@
+#filter-form .form-label {
+  font-weight: 500;
+}
+
+#no-results {
+  font-size: 1.1rem;
+}
+
+#price-value {
+  font-weight: bold;
+  color: var(--bs-primary);
+}
+
+[data-bs-theme='dark'] #price-value {
+  color: var(--bs-primary-text-emphasis);
+}
