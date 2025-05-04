@@ -19,22 +19,34 @@ let deleteConfirmModalInstance = null;
 let carToDeleteId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initial setup
   checkAdminLogin();
   setupAdminLayoutListeners();
 
+  // Initialize modals
+  initializeModals();
+
+  // Event listeners
+  setupEventListeners();
+
+  // Load initial data
+  loadCarsTable();
+});
+
+function initializeModals() {
   const carFormModalEl = document.getElementById('carFormModal');
   if (carFormModalEl) {
     carFormModalInstance = new bootstrap.Modal(carFormModalEl);
-    carFormModalEl.addEventListener('hidden.bs.modal', () => {
-      resetCarForm();
-    });
+    carFormModalEl.addEventListener('hidden.bs.modal', resetCarForm);
   }
 
   const deleteConfirmModalEl = document.getElementById('deleteConfirmModal');
   if (deleteConfirmModalEl) {
     deleteConfirmModalInstance = new bootstrap.Modal(deleteConfirmModalEl);
   }
+}
 
+function setupEventListeners() {
   document
     .getElementById('add-car-button')
     ?.addEventListener('click', handleAddCarClick);
@@ -47,9 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document
     .getElementById('confirmDeleteButton')
     ?.addEventListener('click', handleConfirmDelete);
-
-  loadCarsTable();
-});
+}
 
 function loadCarsTable() {
   const tableBody = document.getElementById('cars-table-body');
@@ -70,33 +80,62 @@ function loadCarsTable() {
   cars.forEach((car) => {
     const defaultImage = `https://placehold.co/80x50.webp?text=${encodeURIComponent(car.brand)}`;
     const row = document.createElement('tr');
+
     row.innerHTML = `
-          <td>${car.id.substring(0, 8)}...</td>
-          <td><img src="${car.imageUrl || defaultImage}" alt="${car.brand} ${car.model}" class="car-thumbnail"></td>
-          <td>${car.brand}</td>
-          <td>${car.model}</td>
-          <td>${car.type}</td>
-          <td>${formatCurrency(car.rentPerDay)}</td>
-          <td class="action-buttons">
-              <button class="btn btn-sm btn-info edit-button" data-id="${car.id}" title="Edit">
-                  <i class="bi bi-pencil-square"></i>
-              </button>
-              <button class="btn btn-sm btn-danger delete-button" data-id="${car.id}" data-info="${car.brand} ${car.model}" title="Delete">
-                  <i class="bi bi-trash"></i>
-              </button>
-          </td>
-      `;
+      <td>${car.id.substring(0, 8)}...</td>
+      <td>
+        <img src="${car.imageUrl || defaultImage}" 
+             alt="${car.brand} ${car.model}" 
+             class="car-thumbnail">
+      </td>
+      <td>${car.brand}</td>
+      <td>${car.model}</td>
+      <td>${car.type}</td>
+      <td>${formatCurrency(car.rentPerDay)}</td>
+      <td>
+        <div class="form-check form-switch">
+          <input class="form-check-input" 
+                 type="checkbox" 
+                 id="switch-${car.id}" 
+                 data-car-id="${car.id}">
+          <label class="form-check-label" 
+                 for="switch-${car.id}">Non-Featured</label>
+        </div>
+      </td>
+      <td class="action-buttons">
+        <button class="btn btn-sm btn-info edit-button" 
+                data-id="${car.id}" 
+                title="Edit">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+        <button class="btn btn-sm btn-danger delete-button" 
+                data-id="${car.id}" 
+                data-info="${car.brand} ${car.model}" 
+                title="Delete">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    `;
+
+    // Setup feature toggle
+    const checkbox = row.querySelector(`#switch-${car.id}`);
+    const label = checkbox.nextElementSibling;
+    checkbox.addEventListener('change', () => {
+      label.textContent = checkbox.checked ? 'Featured' : 'Non-Featured';
+    });
+
     fragment.appendChild(row);
   });
 
   tableBody.appendChild(fragment);
 }
 
+// Form Handlers
 function handleAddCarClick() {
   resetCarForm();
   document.getElementById('carFormModalLabel').textContent = 'Add New Car';
   document.getElementById('saveCarButton').textContent = 'Save Car';
-  if (carFormModalInstance) carFormModalInstance.show();
+  carFormModalInstance?.show();
 }
 
 function handleEditCarClick(carId) {
@@ -104,7 +143,14 @@ function handleEditCarClick(carId) {
   if (!car || !carFormModalInstance) return;
 
   resetCarForm();
+  populateCarForm(car);
 
+  document.getElementById('carFormModalLabel').textContent = 'Edit Car';
+  document.getElementById('saveCarButton').textContent = 'Update Car';
+  carFormModalInstance.show();
+}
+
+function populateCarForm(car) {
   document.getElementById('carId').value = car.id;
   document.getElementById('carBrand').value = car.brand;
   document.getElementById('carModel').value = car.model;
@@ -115,17 +161,13 @@ function handleEditCarClick(carId) {
   document.getElementById('carFeatures').value = Array.isArray(car.features)
     ? car.features.join(', ')
     : '';
-
-  document.getElementById('carFormModalLabel').textContent = 'Edit Car';
-  document.getElementById('saveCarButton').textContent = 'Update Car';
-
-  carFormModalInstance.show();
 }
 
+// Delete Handlers
 function handleDeleteCarClick(carId, carInfo) {
   carToDeleteId = carId;
   document.getElementById('deleteCarInfo').textContent = carInfo || 'this car';
-  if (deleteConfirmModalInstance) deleteConfirmModalInstance.show();
+  deleteConfirmModalInstance?.show();
 }
 
 function handleConfirmDelete() {
@@ -152,6 +194,7 @@ function handleConfirmDelete() {
   }
 }
 
+// Form Submission
 function handleCarFormSubmit(event) {
   event.preventDefault();
   event.stopPropagation();
@@ -175,31 +218,14 @@ function handleCarFormSubmit(event) {
     imageUrl: document.getElementById('carImageUrl').value.trim(),
     description: document.getElementById('carDescription').value.trim(),
     features: document.getElementById('carFeatures').value,
+    featured: document.getElementById('carFeatured').checked,
   };
 
   try {
     if (carData.id) {
-      const updated = updateCar(carData);
-      if (updated) {
-        showToast(
-          `Car "${updated.brand} ${updated.model}" updated successfully.`,
-          'success',
-          'admin-toast'
-        );
-      } else {
-        showToast(
-          'Failed to update car. Car not found.',
-          'error',
-          'admin-toast'
-        );
-      }
+      handleCarUpdate(carData);
     } else {
-      const added = addCar(carData);
-      showToast(
-        `Car "${added.brand} ${added.model}" added successfully.`,
-        'success',
-        'admin-toast'
-      );
+      handleCarCreation(carData);
     }
     carFormModalInstance.hide();
     loadCarsTable();
@@ -209,6 +235,29 @@ function handleCarFormSubmit(event) {
   }
 }
 
+function handleCarUpdate(carData) {
+  const updated = updateCar(carData);
+  if (updated) {
+    showToast(
+      `Car "${updated.brand} ${updated.model}" updated successfully.`,
+      'success',
+      'admin-toast'
+    );
+  } else {
+    showToast('Failed to update car. Car not found.', 'error', 'admin-toast');
+  }
+}
+
+function handleCarCreation(carData) {
+  const added = addCar(carData);
+  showToast(
+    `Car "${added.brand} ${added.model}" added successfully.`,
+    'success',
+    'admin-toast'
+  );
+}
+
+// Utility Functions
 function resetCarForm() {
   const form = document.getElementById('car-form');
   if (form) {
@@ -223,11 +272,11 @@ function handleTableButtonClick(event) {
   if (!target) return;
 
   const carId = target.getAttribute('data-id');
+  const carInfo = target.getAttribute('data-info');
 
   if (target.classList.contains('edit-button')) {
-    if (carId) handleEditCarClick(carId);
+    handleEditCarClick(carId);
   } else if (target.classList.contains('delete-button')) {
-    const carInfo = target.getAttribute('data-info');
-    if (carId) handleDeleteCarClick(carId, carInfo);
+    handleDeleteCarClick(carId, carInfo);
   }
 }
