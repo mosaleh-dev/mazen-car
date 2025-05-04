@@ -1,15 +1,16 @@
 body {
   font-family: sans-serif;
-  background-color: #f8f9fa;
 }
 
 .hero-section {
-  background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1920');
+  background:
+    linear-gradient(rgb(0 0 0 / 50%), rgb(0 0 0 / 50%)),
+    url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1920');
   background-size: cover;
   background-position: center;
   color: white;
-  padding: 100px 0;
-  text-align: center;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
 .hero-section h1 {
@@ -22,25 +23,40 @@ body {
   margin-bottom: 20px;
 }
 
-.car-img {
-  height: 200px;
-  object-fit: cover;
+#featured-vehicles-container .card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
-.offer-img {
-  height: 200px;
-  object-fit: cover;
-}
-
-.carousel-item .card {
-  transition: transform 0.3s;
-}
-
-.carousel-item .card:hover {
+#featured-vehicles-container .card:hover {
   transform: translateY(-10px);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
+}
+
+#featured-vehicles-container .card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+#featured-vehicles-container .card .card-title {
+  font-weight: bold;
+}
+
+#featured-vehicles-container .card .card-text .price {
+  font-weight: bold;
+  color: var(--bs-primary);
+}
+
+[data-bs-theme='dark'] #featured-vehicles-container .card .card-text .price {
+  color: var(--bs-primary-text-emphasis);
 }
 
 .offer-card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
   transition:
     transform 0.3s,
     box-shadow 0.3s;
@@ -51,6 +67,11 @@ body {
   box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
 }
 
+.offer-img {
+  height: 200px;
+  object-fit: cover;
+}
+
 .offer-card .card-body {
   text-align: center;
 }
@@ -58,6 +79,14 @@ body {
 .offer-card .btn-primary {
   width: 100%;
   padding: 10px;
+}
+
+.offer-card .card-text strong {
+  color: var(--bs-body-color);
+}
+
+.offer-card .text-muted {
+  color: var(--bs-secondary-color) !important;
 }
 
 .carousel-control-prev,
@@ -70,13 +99,21 @@ body {
   padding: 0 20px;
 }
 
-.navbar-brand {
-  font-weight: bold;
+section#home,
+section#vehicles,
+section#offers {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
-.footer {
-  background-color: #343a40;
-  color: white;
-  padding: 20px 0;
-  text-align: center;
+.bg-light {
+  background-color: var(--app-header-bg-light) !important;
+  border-top: 1px solid var(--app-border-light);
+  border-bottom: 1px solid var(--app-border-light);
+}
+
+[data-bs-theme='dark'] .bg-light {
+  background-color: var(--app-header-bg-dark) !important;
+  border-top: 1px solid var(--app-border-dark);
+  border-bottom: 1px solid var(--app-border-dark);
 }
