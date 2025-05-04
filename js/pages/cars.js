@@ -115,7 +115,7 @@ function displayCars() {
                              <p class="card-text mt-auto pt-2">
                                  <span class="price fs-5">$${formatCurrency(car.rentPerDay)}</span> / day
                              </p>
-                            <a href="car-details.html?id=${car.id}" class="btn btn-primary mt-2">View Details</a>
+                            <a href="car.html?id=${car.id}" class="btn btn-primary mt-2">View Details</a>
                         </div>
                     </div>
                 </div>
