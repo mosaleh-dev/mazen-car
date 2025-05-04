@@ -12,8 +12,8 @@ function _initMockBookings() {
     {
       id: 'booking1',
       carId: 'car1',
-      customerName: 'Alice Wonderland',
-      customerEmail: 'alice@example.com',
+      customerName: 'Ali Ahmed',
+      customerEmail: 'ali@example.com',
       pickupDate: '2024-09-10',
       pickupTime: '10:00',
       dropoffDate: '2024-09-15',
@@ -24,8 +24,8 @@ function _initMockBookings() {
     {
       id: 'booking2',
       carId: 'car2',
-      customerName: 'Bob The Builder',
-      customerEmail: 'bob@example.com',
+      customerName: 'Hassan Youssef',
+      customerEmail: 'hassan@example.com',
       pickupDate: '2024-09-12',
       pickupTime: '14:00',
       dropoffDate: '2024-09-14',
@@ -36,14 +36,38 @@ function _initMockBookings() {
     {
       id: 'booking3',
       carId: 'car4',
-      customerName: 'Charlie Chaplin',
-      customerEmail: 'charlie@example.com',
+      customerName: 'Khaled Ibrahim',
+      customerEmail: 'khaled@example.com',
       pickupDate: '2024-08-20',
       pickupTime: '09:00',
       dropoffDate: '2024-08-22',
       dropoffTime: '17:00',
       totalCost: 120.0,
       status: 'confirmed',
+    },
+    {
+      id: 'booking4',
+      carId: 'car5',
+      customerName: 'Khaled Ibrahim',
+      customerEmail: 'khaled@example.com',
+      pickupDate: '2024-08-20',
+      pickupTime: '09:00',
+      dropoffDate: '2024-08-22',
+      dropoffTime: '17:00',
+      totalCost: 120.0,
+      status: 'cancelled',
+    },
+    {
+      id: 'booking5',
+      carId: 'car4',
+      customerName: 'Khaled Ibrahim',
+      customerEmail: 'khaled@example.com',
+      pickupDate: '2024-09-20',
+      pickupTime: '09:00',
+      dropoffDate: '2024-09-22',
+      dropoffTime: '17:00',
+      totalCost: 120.0,
+      status: 'cancelled',
     },
   ];
   _saveBookings(mockBookings);
@@ -130,20 +154,18 @@ export function addBooking(bookingData) {
     throw new Error('Incomplete booking data provided.');
   }
 
-  // Get raw bookings for saving (without enrichment)
   const bookingsRaw = JSON.parse(
     localStorage.getItem(BOOKINGS_STORAGE_KEY) || '[]'
   );
   const newBooking = {
     ...bookingData,
-    id: `booking${Date.now()}${Math.random().toString(16).slice(2)}`, // Simple unique ID
-    totalCost: parseFloat(bookingData.totalCost), // Ensure number
-    status: 'pending', // Default status
+    id: `booking${Date.now()}${Math.random().toString(16).slice(2)}`,
+    totalCost: parseFloat(bookingData.totalCost),
+    status: 'pending',
   };
   bookingsRaw.push(newBooking);
   _saveBookings(bookingsRaw);
 
-  // Return the booking enriched with car details for immediate use if needed
   const car = getCarById(newBooking.carId);
   return {
     ...newBooking,
@@ -187,7 +209,6 @@ export function updateBookingStatus(id, status) {
   bookingsRaw[bookingIndex].status = status;
   _saveBookings(bookingsRaw);
 
-  // Return the updated booking, enriched
   const updatedRawBooking = bookingsRaw[bookingIndex];
   const car = getCarById(updatedRawBooking.carId);
   return {
