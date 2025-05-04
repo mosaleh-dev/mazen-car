@@ -30,12 +30,7 @@ async function loginFormHandler(event) {
         window.location.href = '/';
       }
     } else {
-      console.warn(
-        'Login failed:',
-        email,
-        password,
-        log.error || 'Invalid credentials'
-      );
+      console.warn('Login failed:', log.error || 'Invalid credentials');
       passwordInput.classList.add('is-invalid');
       const feedbackDiv = passwordInput.nextElementSibling;
       if (feedbackDiv && feedbackDiv.classList.contains('invalid-feedback')) {
@@ -70,7 +65,6 @@ if (loginForm) {
       input.addEventListener('input', () => {
         if (input.classList.contains('is-invalid')) {
           input.classList.remove('is-invalid');
-          const feedbackDiv = input.nextElementSibling;
         }
       });
     });

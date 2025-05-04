@@ -1,19 +1,19 @@
-// Booking Data Management Module (using Local Storage)
-
 import { getCarById } from './cars.js';
 
 const BOOKINGS_STORAGE_KEY = 'bookingsData';
 
 /**
- * Initializes mock booking data if local storage is empty (optional).
+ * Initializes mock booking data if local storage is empty.
+ * Includes userId linking to mock users.
  */
 function _initMockBookings() {
   const mockBookings = [
     {
       id: 'booking1',
       carId: 'car1',
-      customerName: 'Ali Ahmed',
-      customerEmail: 'ali@example.com',
+      userId: 'user-a',
+      customerName: 'Ali Hassan',
+      customerEmail: 'a@test.com',
       pickupDate: '2024-09-10',
       pickupTime: '10:00',
       dropoffDate: '2024-09-15',
@@ -24,8 +24,9 @@ function _initMockBookings() {
     {
       id: 'booking2',
       carId: 'car2',
-      customerName: 'Hassan Youssef',
-      customerEmail: 'hassan@example.com',
+      userId: 'user-b',
+      customerName: 'Mahmoud Ibrahim',
+      customerEmail: 'b@test.com',
       pickupDate: '2024-09-12',
       pickupTime: '14:00',
       dropoffDate: '2024-09-14',
@@ -36,8 +37,9 @@ function _initMockBookings() {
     {
       id: 'booking3',
       carId: 'car4',
-      customerName: 'Khaled Ibrahim',
-      customerEmail: 'khaled@example.com',
+      userId: 'user-c',
+      customerName: 'Youssef Ahmed',
+      customerEmail: 'c@test.com',
       pickupDate: '2024-08-20',
       pickupTime: '09:00',
       dropoffDate: '2024-08-22',
@@ -48,26 +50,42 @@ function _initMockBookings() {
     {
       id: 'booking4',
       carId: 'car5',
-      customerName: 'Khaled Ibrahim',
-      customerEmail: 'khaled@example.com',
-      pickupDate: '2024-08-20',
+      userId: 'user-c',
+      customerName: 'Youssef Ahmed',
+      customerEmail: 'c@test.com',
+      pickupDate: '2024-08-25',
       pickupTime: '09:00',
-      dropoffDate: '2024-08-22',
+      dropoffDate: '2024-08-28',
       dropoffTime: '17:00',
-      totalCost: 120.0,
+      totalCost: 270.0,
       status: 'cancelled',
     },
     {
       id: 'booking5',
       carId: 'car4',
-      customerName: 'Khaled Ibrahim',
-      customerEmail: 'khaled@example.com',
+      userId: 'user-a',
+      customerName: 'Ali Hassan',
+      customerEmail: 'a@test.com',
       pickupDate: '2024-09-20',
       pickupTime: '09:00',
       dropoffDate: '2024-09-22',
       dropoffTime: '17:00',
       totalCost: 120.0,
-      status: 'cancelled',
+      status: 'pending',
+    },
+    // booking for admin (testing purpose)
+    {
+      id: 'booking-admin-test',
+      carId: 'car3',
+      userId: 'user-admin',
+      customerName: 'Ahmed Mohamed',
+      customerEmail: 'admin@test.com',
+      pickupDate: '2024-10-01',
+      pickupTime: '12:00',
+      dropoffDate: '2024-10-03',
+      dropoffTime: '12:00',
+      totalCost: 240.0,
+      status: 'confirmed',
     },
   ];
   _saveBookings(mockBookings);
@@ -101,7 +119,6 @@ export function getBookings() {
       bookings = JSON.parse(bookingsData);
     }
 
-    // Enrich bookings with car details
     return bookings.map((booking) => {
       const car = getCarById(booking.carId);
       return {
@@ -113,12 +130,13 @@ export function getBookings() {
               imageUrl: car.imageUrl,
               type: car.type,
             }
-          : null, // Add type if needed
+          : null,
       };
     });
   } catch (e) {
     console.error('Error getting bookings from local storage:', e);
-    return _initMockBookings(); // Attempt recovery
+    localStorage.removeItem(BOOKINGS_STORAGE_KEY);
+    return _initMockBookings();
   }
 }
 
@@ -135,13 +153,14 @@ export function getBookingById(id) {
 /**
  * Adds a new booking to the storage.
  * @param {Object} bookingData The data for the new booking. Needs validation beforehand.
- *                         Required: carId, customerName, customerEmail, pickupDate, pickupTime, dropoffDate, dropoffTime, totalCost
+ *                         Required: carId, userId, customerName, customerEmail, pickupDate, pickupTime, dropoffDate, dropoffTime, totalCost
  * @returns {Object} The newly added booking object with an assigned ID and status.
  */
 export function addBooking(bookingData) {
   if (
     !bookingData ||
     !bookingData.carId ||
+    !bookingData.userId ||
     !bookingData.customerName ||
     !bookingData.customerEmail ||
     !bookingData.pickupDate ||
@@ -157,12 +176,21 @@ export function addBooking(bookingData) {
   const bookingsRaw = JSON.parse(
     localStorage.getItem(BOOKINGS_STORAGE_KEY) || '[]'
   );
+
   const newBooking = {
-    ...bookingData,
     id: `booking${Date.now()}${Math.random().toString(16).slice(2)}`,
+    carId: bookingData.carId,
+    userId: bookingData.userId,
+    customerName: bookingData.customerName,
+    customerEmail: bookingData.customerEmail,
+    pickupDate: bookingData.pickupDate,
+    pickupTime: bookingData.pickupTime,
+    dropoffDate: bookingData.dropoffDate,
+    dropoffTime: bookingData.dropoffTime,
     totalCost: parseFloat(bookingData.totalCost),
     status: 'pending',
   };
+
   bookingsRaw.push(newBooking);
   _saveBookings(bookingsRaw);
 

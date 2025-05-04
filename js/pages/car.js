@@ -1,4 +1,5 @@
 import { getCarById } from '../modules/cars.js';
+import { isLoggedIn } from '../modules/auth.js';
 import {
   getQueryParam,
   formatCurrency,
@@ -31,6 +32,15 @@ function displayCarDetails() {
 
   container.innerHTML = '';
 
+  let bookButtonHtml = '';
+  const bookUrl = `booking.html?carId=${car.id}`;
+  const loginRedirectUrl = `/login.html?redirect=${encodeURIComponent(bookUrl)}`;
+
+  bookButtonHtml = `
+      <a href="${isLoggedIn() ? bookUrl : loginRedirectUrl}" class="btn btn-${isLoggedIn() ? 'primary' : 'warning'} btn-lg mt-3 ${!car.availability ? 'disabled' : ''}" ${!car.availability ? 'aria-disabled="true" tabindex="-1"' : ''}>
+          <i class="bi ${isLoggedIn() ? 'bi-calendar-plus' : 'bi-box-arrow-in-right'} me-2"></i>${isLoggedIn() ? 'Book Now' : 'Login to Book'}
+      </a>`;
+
   const detailsHtml = `
         <div class="col-lg-7 mb-4">
             <img src="${car.imageUrl || 'https://placehold.co/600x400.webp?text=No+Image'}" class="img-fluid rounded shadow-sm" alt="${car.brand} ${car.model}">
@@ -44,7 +54,9 @@ function displayCarDetails() {
             <p>${car.description || 'No description available.'}</p>
 
             ${
-              car.features && car.features.length > 0
+              car.features &&
+              Array.isArray(car.features) &&
+              car.features.length > 0
                 ? `
             <h4 class="mt-4">Features</h4>
             <ul class="list-unstyled features-list">
@@ -57,9 +69,8 @@ function displayCarDetails() {
              <h4 class="mt-4">Availability</h4>
              <p>${car.availability ? '<span class="text-success fw-bold">Available</span> - Check dates during booking.' : '<span class="text-danger fw-bold">Currently Unavailable</span>'}</p>
 
-            <a href="booking.html?carId=${car.id}" class="btn btn-primary btn-lg mt-3 ${!car.availability ? 'disabled' : ''}" ${!car.availability ? 'aria-disabled="true" tabindex="-1"' : ''}>
-                <i class="bi bi-calendar-plus me-2"></i>Book Now
-            </a>
+            ${bookButtonHtml} <!-- Insert the dynamically generated button -->
+
         </div>
     `;
 

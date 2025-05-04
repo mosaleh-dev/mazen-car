@@ -1,12 +1,12 @@
 import { getCarById } from '../modules/cars.js';
 import { addBooking } from '../modules/bookings.js';
+import { isLoggedIn, getCurrentUser } from '../modules/auth.js';
 import {
   getQueryParam,
   formatCurrency,
   showToast,
   validateForm,
   resetFormValidation,
-  formatDate,
   formatDateTime,
   attachThemeToggler,
 } from '../utils/helpers.js';
@@ -21,6 +21,10 @@ let fp = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   attachThemeToggler();
+
+  if (!isLoggedIn()) {
+    window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.href)}`;
+  }
 
   const bookingForm = document.getElementById('booking-form');
   carId = getQueryParam('carId');
@@ -51,7 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCarSummary();
 
   bookingForm
-    ?.querySelectorAll('input[type="date"], input[type="time"]')
+    ?.querySelectorAll(
+      'input[type="date"], input[type="time"], input#date-range'
+    )
     .forEach((input) => {
       input.addEventListener('change', updateBookingSummary);
     });
@@ -60,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     bookingForm.addEventListener('submit', handleBookingSubmit);
   }
 
-  // Load bookedDates for this carId
   bookedDates = JSON.parse(localStorage.getItem(`bookedDates${carId}`)) || [];
   disabledDates = [];
   bookedDates.forEach((range) => {
@@ -70,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
   });
 
-  // Initialize Flatpickr
   fp = flatpickr('#date-range', {
     mode: 'range',
     dateFormat: 'Y-m-d',
@@ -82,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
     onClose: function (selectedDates, dateStr, instance) {
       if (selectedDates.length === 2) {
         instance.element.dispatchEvent(new Event('change'));
-        const altInput = instance.altInput;
       }
     },
   });
@@ -109,23 +112,44 @@ function loadCarSummary() {
         <p><strong>Pickup:</strong> <span id="summary-pickup">Select date & time</span></p>
         <p><strong>Drop-off:</strong> <span id="summary-dropoff">Select date & time</span></p>
         <p><strong>Duration:</strong> <span id="summary-duration">--</span> days</p>
-        <p><strong>Rate:</strong> $<span id="summary-rate">${formatCurrency(carRentPerDay)}</span>/day</p>
+        <p><strong>Rate:</strong> $${formatCurrency(carRentPerDay)}/day</p>
         <hr>
         <h5 class="mb-0">Total Cost: $<span id="summary-total">--.--</span></h5>
     `;
 }
 
 function updateBookingSummary() {
-  const dateRange = document.getElementById('date-range').value;
-  const [pickupDate, dropoffDate] = dateRange.split(' to ');
+  const dateRangeInput = document.getElementById('date-range');
+  if (!dateRangeInput || !dateRangeInput._flatpickr) return;
+
+  const selectedDates = dateRangeInput._flatpickr.selectedDates;
   const pickupTime = document.getElementById('pickupTime').value;
   const dropoffTime = document.getElementById('dropoffTime').value;
 
+  const pickupDate = selectedDates.length > 0 ? selectedDates[0] : null;
+  const dropoffDate = selectedDates.length > 1 ? selectedDates[1] : null;
+
   const pickupDateTime =
-    pickupDate && pickupTime ? new Date(`${pickupDate}T${pickupTime}`) : null;
+    pickupDate && pickupTime
+      ? new Date(
+          pickupDate.setHours(
+            parseInt(pickupTime.split(':')[0]),
+            parseInt(pickupTime.split(':')[1]),
+            0,
+            0
+          )
+        )
+      : null;
   const dropoffDateTime =
     dropoffDate && dropoffTime
-      ? new Date(`${dropoffDate}T${dropoffTime}`)
+      ? new Date(
+          dropoffDate.setHours(
+            parseInt(dropoffTime.split(':')[0]),
+            parseInt(dropoffTime.split(':')[1]),
+            0,
+            0
+          )
+        )
       : null;
 
   const summaryPickup = document.getElementById('summary-pickup');
@@ -142,12 +166,12 @@ function updateBookingSummary() {
       ? formatDateTime(dropoffDateTime)
       : 'Select date & time';
 
-  const dropoffDateInput = document.getElementById('dropoffDate');
-  if (dropoffDateTime && pickupDateTime && dropoffDateTime > pickupDateTime) {
-    dropoffDateInput?.classList.remove('is-invalid');
-  }
-
   if (pickupDateTime && dropoffDateTime && dropoffDateTime > pickupDateTime) {
+    dateRangeInput.classList.remove('is-invalid');
+    if (dateRangeInput._flatpickr.altInput) {
+      dateRangeInput._flatpickr.altInput.classList.remove('is-invalid');
+    }
+
     const durationMillis = dropoffDateTime - pickupDateTime;
     const durationDays = Math.max(
       1,
@@ -169,6 +193,18 @@ function handleBookingSubmit(event) {
   event.stopPropagation();
 
   const form = event.target;
+  const user = getCurrentUser();
+
+  if (!user) {
+    showToast(
+      'Error: User not logged in. Please refresh and log in again.',
+      'error',
+      'booking-toast'
+    );
+    window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.href)}`;
+    return;
+  }
+
   if (!currentCar || !currentCar.availability) {
     showToast('Cannot book unavailable car.', 'error', 'booking-toast');
     return;
@@ -184,24 +220,50 @@ function handleBookingSubmit(event) {
   }
 
   const dateRange = document.getElementById('date-range').value;
-  const [pickupDate, dropoffDate] = dateRange.split(' to ');
+  const [pickupDateStr, dropoffDateStr] = dateRange.split(' to ');
+  if (!pickupDateStr || !dropoffDateStr) {
+    showToast('Please select a valid date range.', 'warning', 'booking-toast');
+    document.getElementById('date-range').classList.add('is-invalid');
+    // Target altInput if exists
+    const altInput = document.getElementById('date-range')._flatpickr?.altInput;
+    if (altInput) altInput.classList.add('is-invalid');
+    return;
+  }
+
   const pickupTime = document.getElementById('pickupTime').value;
   const dropoffTime = document.getElementById('dropoffTime').value;
-  const pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
-  const dropoffDateTime = new Date(`${dropoffDate}T${dropoffTime}`);
+
+  const pickupDateTime = new Date(`${pickupDateStr}T${pickupTime}`);
+  const dropoffDateTime = new Date(`${dropoffDateStr}T${dropoffTime}`);
+
+  if (
+    isNaN(pickupDateTime.getTime()) ||
+    isNaN(dropoffDateTime.getTime()) ||
+    dropoffDateTime <= pickupDateTime
+  ) {
+    showToast(
+      'Invalid date or time selection. Drop-off must be after pickup.',
+      'error',
+      'booking-toast'
+    );
+    return;
+  }
+
   const durationMillis = dropoffDateTime - pickupDateTime;
   const durationDays = Math.max(
     1,
     Math.ceil(durationMillis / (1000 * 60 * 60 * 24))
   );
   const totalCost = durationDays * carRentPerDay;
+
   const bookingData = {
     carId: currentCar.id,
-    customerName: document.getElementById('customerName').value,
-    customerEmail: document.getElementById('customerEmail').value,
-    pickupDate: pickupDate,
+    userId: user.id,
+    customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+    customerEmail: user.email,
+    pickupDate: pickupDateStr,
     pickupTime: pickupTime,
-    dropoffDate: dropoffDate,
+    dropoffDate: dropoffDateStr,
     dropoffTime: dropoffTime,
     totalCost: totalCost,
   };
@@ -211,6 +273,7 @@ function handleBookingSubmit(event) {
     displayConfirmation(newBooking);
     resetFormValidation(form);
     form.reset();
+    if (fp) fp.clear(); // Clear flatpickr selection
     document.getElementById('summary-pickup').textContent =
       'Select date & time';
     document.getElementById('summary-dropoff').textContent =
@@ -261,17 +324,36 @@ function getDatesBetween(startDate, endDate) {
   const dates = [];
   let currentDate = new Date(startDate);
   const lastDate = new Date(endDate);
-  while (currentDate <= lastDate) {
-    dates.push(new Date(currentDate).toISOString().split('T')[0]);
-    currentDate.setDate(currentDate.getDate() + 1);
+
+  // Adjust dates to UTC to avoid timezone issues when comparing/incrementing
+  const startUTC = Date.UTC(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate()
+  );
+  const endUTC = Date.UTC(
+    lastDate.getFullYear(),
+    lastDate.getMonth(),
+    lastDate.getDate()
+  );
+  let currentUTC = startUTC;
+
+  while (currentUTC <= endUTC) {
+    const localDate = new Date(currentUTC);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    dates.push(`${year}-${month}-${day}`);
+    currentUTC += 24 * 60 * 60 * 1000;
   }
+
   return dates;
 }
 
 function bookDates() {
-  if (fp.selectedDates.length !== 2) {
-    console.error('Invalid date range');
-    alert('Please select a valid date range.');
+  if (!fp || fp.selectedDates.length !== 2) {
+    console.error('Invalid date range selected in Flatpickr');
+    // Don't alert here, issue should be caught before confirmation
     return;
   }
 
@@ -282,8 +364,7 @@ function bookDates() {
     isNaN(endDate.getTime()) ||
     startDate > endDate
   ) {
-    console.error('Invalid date range:', { startDate, endDate });
-    alert('Invalid date range selected.');
+    console.error('Invalid date range object:', { startDate, endDate });
     return;
   }
 
@@ -294,17 +375,19 @@ function bookDates() {
     return `${year}-${month}-${day}`;
   };
 
-  const newBooking = {
+  const newBookingRange = {
     from: formatDateToString(startDate),
     to: formatDateToString(endDate),
   };
 
-  bookedDates.push(newBooking);
+  bookedDates.push(newBookingRange);
   localStorage.setItem(`bookedDates${carId}`, JSON.stringify(bookedDates));
+
   disabledDates = [
     ...disabledDates,
-    ...getDatesBetween(newBooking.from, newBooking.to),
+    ...getDatesBetween(newBookingRange.from, newBookingRange.to),
   ];
-  fp.set('disable', disabledDates);
-  fp.clear();
+  if (fp) {
+    fp.set('disable', disabledDates);
+  }
 }
