@@ -224,7 +224,7 @@ export function showToast(message, type = 'info', toastId = 'app-toast') {
 export function checkAdminLogin() {
   const isAdminLoggedIn = isAdmin();
   if (isAdminLoggedIn !== true) {
-    setQueryParam('redirect', value);
+    // setQueryParam('redirect', value);
     window.location.href = '/login.html';
   }
 }

@@ -18,6 +18,7 @@ export default defineConfig({
         bookingHistory: resolve(__dirname, 'booking-history.html'),
         car: resolve(__dirname, 'car.html'),
         cars: resolve(__dirname, 'cars.html'),
+        contact: resolve(__dirname, 'contact.html'),
       },
     },
   },
