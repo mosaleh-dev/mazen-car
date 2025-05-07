@@ -102,25 +102,36 @@ function displayCars() {
     noResultsDiv.classList.remove('d-none');
   } else {
     noResultsDiv.classList.add('d-none');
-    filteredCars.forEach((car) => {
+    filteredCars.forEach((car, index) => {
+      const switchId = `switch${index}`;
+      const statusId = `status${index}`;
+
       carsCards += `
-                <div class="col">
-                    <div class="card h-100 car-card">
-                         <img src="${car.imageUrl || 'https://placehold.co/300x200.webp?text=No+Image'}" class="card-img-top" alt="${car.brand} ${car.model}">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">${car.brand} ${car.model}</h5>
-                            <p class="card-text">
-                                <span class="badge bg-secondary">${car.type}</span>
-                            </p>
-                             <p class="card-text mt-auto pt-2">
-                                 <span class="price fs-5">$${formatCurrency(car.rentPerDay)}</span> / day
-                             </p>
-                            <a href="car.html?id=${car.id}" class="btn btn-primary mt-2">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            `;
+      <div class="col">
+        <div class="card h-100 car-card">
+          <img src="${car.imageUrl || 'https://placehold.co/300x200.webp?text=No+Image'}" class="card-img-top" alt="${car.brand} ${car.model}">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${car.brand} ${car.model}</h5>
+            <p class="card-text">
+              <span class="badge bg-secondary">${car.type}</span>
+            </p>
+            <p class="card-text mt-auto pt-2">
+              <span class="price fs-5">$${formatCurrency(car.rentPerDay)}</span> / day
+              
+            </p>
+            <a href="car.html?id=${car.id}" class="btn btn-primary mt-2">View Details</a>
+          </div>
+        </div>
+      </div>
+    `;
     });
+
     carListingsContainer.innerHTML = carsCards;
+
+    filteredCars.forEach((_, index) => {
+      const switchId = `switch${index}`;
+      const statusId = `status${index}`;
+      toggleFeature(switchId, statusId);
+    });
   }
 }
