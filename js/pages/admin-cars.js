@@ -99,7 +99,7 @@ function loadCarsTable() {
                  id="switch-${car.id}" 
                  data-car-id="${car.id}">
           <label class="form-check-label" 
-                 for="switch-${car.id}">Non-Featured</label>
+                 for="switch-${car.id}"></label>
         </div>
       </td>
       <td class="action-buttons">
@@ -121,7 +121,7 @@ function loadCarsTable() {
     const checkbox = row.querySelector(`#switch-${car.id}`);
     const label = checkbox.nextElementSibling;
     checkbox.addEventListener('change', () => {
-      label.textContent = checkbox.checked ? 'Featured' : 'Non-Featured';
+      label.textContent = '';
     });
 
     fragment.appendChild(row);

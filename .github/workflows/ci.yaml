@@ -1,4 +1,4 @@
-name: Build and Deploy to Pages
+name: Build and Deploy to Cloudflare Pages
 
 on:
   push:
@@ -35,23 +35,40 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          path: './dist'
+          name: dist-artifact
+          path: ./dist
+          retention-days: 1
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build-and-lint
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     permissions:
-      pages: write
-      id-token: write
+      contents: read
+      deployments: write
 
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-artifact
+          path: ./dist
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        id: deploy
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=main
+          wranglerVersion: '3'
+
+      - name: Print deployment URL
+        run: echo 'Deployment URL: ${{ steps.deploy.outputs.deployment-url }}"
