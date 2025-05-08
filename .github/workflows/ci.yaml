@@ -71,4 +71,6 @@ jobs:
           wranglerVersion: '3'
 
       - name: Print deployment URL
-        run: echo Deployment URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          DEPLOYMENT_URL=${{ steps.deploy.outputs.deployment-url }}
+          echo "Deployment URL: $DEPLOYMENT_URL"
