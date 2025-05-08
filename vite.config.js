@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
-import posthtml from 'vite-plugin-posthtml';
+import Posthtml from '@vituum/vite-plugin-posthtml';
 import posthtmlInclude from 'posthtml-include';
 
 export default defineConfig({
   plugins: [
-    posthtml({
+    Posthtml({
       plugins: [
         posthtmlInclude({
           root: resolve(__dirname),
