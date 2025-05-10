@@ -1,0 +1,51 @@
+diff --git a/node_modules/@vituum/vite-plugin-posthtml/node_modules/posthtml-include/lib/index.js b/node_modules/@vituum/vite-plugin-posthtml/node_modules/posthtml-include/lib/index.js
+index ad5320a..782e338 100644
+--- a/node_modules/@vituum/vite-plugin-posthtml/node_modules/posthtml-include/lib/index.js
++++ b/node_modules/@vituum/vite-plugin-posthtml/node_modules/posthtml-include/lib/index.js
+@@ -30,13 +30,19 @@ module.exports = (options = {}) => {
+         source = fs.readFileSync(src, options.encoding);
+ 
+         try {
+-          const localsRaw = node.attrs.locals || (node.content ? node.content.join().replace(/\n/g, '') : false);
++          console.log(JSON.stringify(node.content,null,2))
++          const localsRaw = node.attrs.locals || "{}";
+           const localsJson = JSON.parse(localsRaw);
++          localsJson["defaultSlot"] = generateHtmlString(node.content)
++          console.log(JSON.stringify(localsJson))
++
+           posthtmlExpressionsOptions = {
+             ...posthtmlExpressionsOptions,
+             locals: posthtmlExpressionsOptions.locals ? Object.assign(posthtmlExpressionsOptions.locals, localsJson) : localsJson
+           };
+-        } catch {}
++        } catch(e) {
++          console.log(e)
++        }
+ 
+         if (posthtmlExpressionsOptions.locals) {
+           const result = posthtml()
+@@ -68,3 +74,24 @@ module.exports = (options = {}) => {
+     return tree;
+   };
+ };
++
++function generateHtmlString(element) {
++  if (typeof element === 'string') {
++    return element;
++  }
++
++  if (Array.isArray(element)) {
++    return element.map(generateHtmlString).join('');
++  }
++
++  if (typeof element === 'object' && element !== null) {
++    const { tag, attrs, content } = element;
++    const attributes = attrs ? Object.entries(attrs).map(([key, value]) => `${key}="${value}"`).join(' ') : '';
++    const openTag = `<${tag}${attributes ? ' ' + attributes : ''}>`;
++    const closeTag = `</${tag}>`;
++    const innerContent = content ? generateHtmlString(content) : '';
++    return `${openTag}${innerContent}${closeTag}`;
++  }
++
++  return '';
++}

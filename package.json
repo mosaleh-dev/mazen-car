@@ -17,6 +17,7 @@
     "eslint-plugin-prettier": "^5.2.6",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
+    "patch-package": "^8.0.0",
     "posthtml": "^0.16.6",
     "posthtml-include": "^2.0.1",
     "prettier": "^3.5.3",
@@ -38,7 +39,8 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "patch-package"
   },
   "lint-staged": {
     "*.js": "eslint --fix",
