@@ -1,7 +1,19 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import Posthtml from '@vituum/vite-plugin-posthtml';
+import posthtmlInclude from 'posthtml-include';
 
 export default defineConfig({
+  plugins: [
+    Posthtml({
+      plugins: [
+        posthtmlInclude({
+          root: resolve(__dirname),
+          encoding: 'utf8',
+        }),
+      ],
+    }),
+  ],
   build: {
     target: 'es2022',
     rollupOptions: {

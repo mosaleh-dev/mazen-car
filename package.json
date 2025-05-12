@@ -7,6 +7,7 @@
   },
   "type": "module",
   "devDependencies": {
+    "@vituum/vite-plugin-posthtml": "^1.1.0",
     "@web-std/file": "^3.0.3",
     "adm-zip": "^0.5.16",
     "concurrently": "^9.1.2",
@@ -16,6 +17,9 @@
     "eslint-plugin-prettier": "^5.2.6",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.1",
+    "patch-package": "^8.0.0",
+    "posthtml": "^0.16.6",
+    "posthtml-include": "^2.0.1",
     "prettier": "^3.5.3",
     "stylelint": "^16.19.0",
     "stylelint-config-standard": "^38.0.0",
@@ -35,7 +39,8 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "patch-package"
   },
   "lint-staged": {
     "*.js": "eslint --fix",
