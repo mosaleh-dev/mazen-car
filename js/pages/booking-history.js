@@ -1,14 +1,8 @@
 import { getBookings } from '../modules/bookings.js';
 import { isLoggedIn, getCurrentUser } from '../modules/auth.js';
-import {
-  formatCurrency,
-  formatDateTime,
-  attachThemeToggler,
-} from '../utils/helpers.js';
+import { formatCurrency, formatDateTime } from '../utils/helpers.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  attachThemeToggler();
-
   if (!isLoggedIn()) {
     window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.href)}`;
     return;

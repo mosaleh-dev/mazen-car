@@ -1,13 +1,8 @@
 import { getCarById } from '../modules/cars.js';
 import { isLoggedIn } from '../modules/auth.js';
-import {
-  getQueryParam,
-  formatCurrency,
-  attachThemeToggler,
-} from '../utils/helpers.js';
+import { getQueryParam, formatCurrency } from '../utils/helpers.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  attachThemeToggler();
   displayCarDetails();
 });
 

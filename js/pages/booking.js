@@ -8,7 +8,6 @@ import {
   validateForm,
   resetFormValidation,
   formatDateTime,
-  attachThemeToggler,
 } from '../utils/helpers.js';
 
 let currentCar = null;
@@ -20,8 +19,6 @@ let disabledDates = [];
 let fp = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  attachThemeToggler();
-
   if (!isLoggedIn()) {
     window.location.href = `/login.html?redirect=${encodeURIComponent(window.location.href)}`;
   }

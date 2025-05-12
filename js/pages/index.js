@@ -1,5 +1,5 @@
 import { getFeaturedCars } from '../modules/data.js';
-import { attachThemeToggler, formatCurrency } from '../utils/helpers.js';
+import { formatCurrency } from '../utils/helpers.js';
 
 //TODO: add offers page and offers managment
 const offersData = [
@@ -151,7 +151,6 @@ function displayOffers() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  attachThemeToggler();
   var carCarouselElement = document.querySelector('#carCarousel');
   var carouselInstance = null;
   if (carCarouselElement) {

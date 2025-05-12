@@ -360,6 +360,4 @@ export function setupAdminLayoutListeners() {
       logoutButton.dataset.logoutListenerAttached = 'true';
     }
   }
-
-  attachThemeToggler(); // Ensure theme toggler works on admin pages
 }
