@@ -54,8 +54,6 @@ async function signupFormHandler(event) {
       passwordConfirm,
     });
 
-    console.log('Signup result:', signupResult);
-
     if (signupResult.success) {
       const redirectTo = getQueryParam('redirect');
       if (redirectTo) {
