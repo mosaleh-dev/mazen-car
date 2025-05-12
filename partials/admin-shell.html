@@ -1,0 +1,81 @@
+<script type="module" defer src="/partials/js/activa-link-style.js"></script>
+<div class="d-flex" id="wrapper">
+  <div
+    class="bg-dark border-right vh-100 d-flex flex-column"
+    id="sidebar-wrapper"
+  >
+    <div class="sidebar-heading text-white text-center py-4 fs-4">
+      Admin Panel
+    </div>
+    <div class="list-group list-group-flush flex-grow-1">
+      <a
+        href="admin-dashboard.html"
+        class="list-group-item list-group-item-action bg-dark text-white"
+        ><i class="bi bi-speedometer2 me-2"></i>Dashboard</a
+      >
+      <a
+        href="admin-cars.html"
+        class="list-group-item list-group-item-action bg-dark text-white"
+        ><i class="bi bi-car-front-fill me-2"></i>Manage Cars</a
+      >
+      <a
+        href="admin-bookings.html"
+        class="list-group-item list-group-item-action bg-dark text-white"
+        ><i class="bi bi-calendar-check me-2"></i>Manage Bookings</a
+      >
+      <a
+        href="admin-users.html"
+        class="list-group-item list-group-item-action bg-dark text-white"
+        ><i class="bi bi-people-fill me-2"></i>Manage Users</a
+      >
+      <a
+        href="admin-reports.html"
+        class="list-group-item list-group-item-action bg-dark text-white"
+        ><i class="bi bi-bar-chart-line me-2"></i>Reports</a
+      >
+    </div>
+    <div class="list-group list-group-flush">
+      <a
+        href="#"
+        id="logout-button"
+        class="list-group-item list-group-item-action bg-dark text-danger"
+        ><i class="bi bi-box-arrow-left me-2"></i>Logout</a
+      >
+    </div>
+  </div>
+
+  <div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <div class="container-fluid">
+        <button class="btn btn-primary d-md-none me-2" id="menu-toggle">
+          <i class="bi bi-list"></i>
+        </button>
+        <h5 class="ms-md-3 mb-0">Dashboard Overview</h5>
+        <div class="ms-auto d-flex align-items-center">
+          <span class="navbar-text me-3"> Welcome, Admin! </span>
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            id="theme-toggler"
+            type="button"
+          >
+            <i
+              class="bi bi-sun-fill theme-icon-active"
+              data-theme-icon="bi-sun-fill"
+            ></i>
+            <i
+              class="bi bi-moon-fill d-none"
+              data-theme-icon="bi-moon-fill"
+            ></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container-fluid p-4">{{{ defaultSlot }}}</main>
+    <footer class="bg-light text-muted text-center py-3 mt-auto border-top">
+      <div class="container-fluid">
+        <p class="mb-0">© 2024 Car Rental System. Admin Panel.</p>
+      </div>
+    </footer>
+  </div>
+</div>

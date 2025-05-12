@@ -18,222 +18,131 @@
     <link rel="stylesheet" href="css/admin.css" />
   </head>
   <body>
-    <div class="d-flex" id="wrapper">
-      <div
-        class="bg-dark border-right vh-100 d-flex flex-column"
-        id="sidebar-wrapper"
-      >
-        <div class="sidebar-heading text-white text-center py-4 fs-4">
-          Admin Panel
-        </div>
-        <div class="list-group list-group-flush flex-grow-1">
-          <a
-            href="admin-dashboard.html"
-            class="list-group-item list-group-item-action bg-dark text-white active"
-            ><i class="bi bi-speedometer2 me-2"></i>Dashboard</a
-          >
-          <a
-            href="admin-cars.html"
-            class="list-group-item list-group-item-action bg-dark text-white"
-            ><i class="bi bi-car-front-fill me-2"></i>Manage Cars</a
-          >
-          <a
-            href="admin-bookings.html"
-            class="list-group-item list-group-item-action bg-dark text-white"
-            ><i class="bi bi-calendar-check me-2"></i>Manage Bookings</a
-          >
-          <a
-            href="admin-users.html"
-            class="list-group-item list-group-item-action bg-dark text-white"
-            ><i class="bi bi-people-fill me-2"></i>Manage Users</a
-          >
-          <a
-            href="admin-reports.html"
-            class="list-group-item list-group-item-action bg-dark text-white"
-            ><i class="bi bi-bar-chart-line me-2"></i>Reports</a
-          >
-        </div>
-        <div class="list-group list-group-flush">
-          <a
-            href="#"
-            id="logout-button"
-            class="list-group-item list-group-item-action bg-dark text-danger"
-            ><i class="bi bi-box-arrow-left me-2"></i>Logout</a
-          >
-        </div>
-      </div>
+    <include src="partials/admin-shell.html">
+      <h1 class="mt-4">Dashboard</h1>
+      <p>Welcome to the Car Rental System Admin Dashboard.</p>
 
-      <div id="page-content-wrapper">
-        <nav
-          class="navbar navbar-expand-lg navbar-light bg-light border-bottom"
-        >
-          <div class="container-fluid">
-            <button class="btn btn-primary d-md-none me-2" id="menu-toggle">
-              <i class="bi bi-list"></i>
-            </button>
-            <h5 class="ms-md-3 mb-0">Dashboard Overview</h5>
-            <div class="ms-auto d-flex align-items-center">
-              <span class="navbar-text me-3"> Welcome, Admin! </span>
-              <button
-                class="btn btn-outline-secondary btn-sm"
-                id="theme-toggler"
-                type="button"
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 class="card-title">Total Cars</h5>
+                  <p class="card-text fs-2" id="total-cars-stat">0</p>
+                </div>
+                <i
+                  class="bi bi-car-front-fill opacity-50"
+                  style="font-size: 3rem"
+                ></i>
+              </div>
+            </div>
+            <div
+              class="card-footer d-flex align-items-center justify-content-between"
+            >
+              <a class="small text-white stretched-link" href="admin-cars.html"
+                >View Details</a
               >
+              <div class="small text-white">
+                <i class="bi bi-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-success h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 class="card-title">Total Bookings</h5>
+                  <p class="card-text fs-2" id="total-bookings-stat">0</p>
+                </div>
                 <i
-                  class="bi bi-sun-fill theme-icon-active"
-                  data-theme-icon="bi-sun-fill"
+                  class="bi bi-calendar-check opacity-50"
+                  style="font-size: 3rem"
                 ></i>
+              </div>
+            </div>
+            <div
+              class="card-footer d-flex align-items-center justify-content-between"
+            >
+              <a
+                class="small text-white stretched-link"
+                href="admin-bookings.html"
+                >View Details</a
+              >
+              <div class="small text-white">
+                <i class="bi bi-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-warning h-100">
+            <div class="card-body text-dark">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 class="card-title">Pending Bookings</h5>
+                  <p class="card-text fs-2" id="pending-bookings-stat">0</p>
+                </div>
                 <i
-                  class="bi bi-moon-fill d-none"
-                  data-theme-icon="bi-moon-fill"
+                  class="bi bi-hourglass-split opacity-50"
+                  style="font-size: 3rem"
                 ></i>
-              </button>
-            </div>
-          </div>
-        </nav>
-
-        <main class="container-fluid p-4">
-          <h1 class="mt-4">Dashboard</h1>
-          <p>Welcome to the Car Rental System Admin Dashboard.</p>
-
-          <div class="row g-4 mb-4">
-            <div class="col-md-4">
-              <div class="card text-white bg-primary h-100">
-                <div class="card-body">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <h5 class="card-title">Total Cars</h5>
-                      <p class="card-text fs-2" id="total-cars-stat">0</p>
-                    </div>
-                    <i
-                      class="bi bi-car-front-fill opacity-50"
-                      style="font-size: 3rem"
-                    ></i>
-                  </div>
-                </div>
-                <div
-                  class="card-footer d-flex align-items-center justify-content-between"
-                >
-                  <a
-                    class="small text-white stretched-link"
-                    href="admin-cars.html"
-                    >View Details</a
-                  >
-                  <div class="small text-white">
-                    <i class="bi bi-chevron-right"></i>
-                  </div>
-                </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="card text-white bg-success h-100">
-                <div class="card-body">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <h5 class="card-title">Total Bookings</h5>
-                      <p class="card-text fs-2" id="total-bookings-stat">0</p>
-                    </div>
-                    <i
-                      class="bi bi-calendar-check opacity-50"
-                      style="font-size: 3rem"
-                    ></i>
-                  </div>
-                </div>
-                <div
-                  class="card-footer d-flex align-items-center justify-content-between"
-                >
-                  <a
-                    class="small text-white stretched-link"
-                    href="admin-bookings.html"
-                    >View Details</a
-                  >
-                  <div class="small text-white">
-                    <i class="bi bi-chevron-right"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card text-white bg-warning h-100">
-                <div class="card-body text-dark">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <h5 class="card-title">Pending Bookings</h5>
-                      <p class="card-text fs-2" id="pending-bookings-stat">0</p>
-                    </div>
-                    <i
-                      class="bi bi-hourglass-split opacity-50"
-                      style="font-size: 3rem"
-                    ></i>
-                  </div>
-                </div>
-                <div
-                  class="card-footer d-flex align-items-center justify-content-between"
-                >
-                  <a
-                    class="small text-dark stretched-link"
-                    href="admin-bookings.html?status=pending"
-                    >View Details</a
-                  >
-                  <div class="small text-dark">
-                    <i class="bi bi-chevron-right"></i>
-                  </div>
-                </div>
+            <div
+              class="card-footer d-flex align-items-center justify-content-between"
+            >
+              <a
+                class="small text-dark stretched-link"
+                href="admin-bookings.html?status=pending"
+                >View Details</a
+              >
+              <div class="small text-dark">
+                <i class="bi bi-chevron-right"></i>
               </div>
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-md-6">
-              <div class="card mb-4">
-                <div class="card-header">Quick Actions</div>
-                <div class="card-body">
-                  <a
-                    href="admin-cars.html#add-car-modal"
-                    class="btn btn-primary mb-2"
-                    ><i class="bi bi-plus-circle me-1"></i> Add New Car</a
-                  >
-                  <a href="admin-users.html" class="btn btn-info mb-2"
-                    ><i class="bi bi-person-gear me-1"></i> Manage Users</a
-                  >
-                  <a href="admin-bookings.html" class="btn btn-secondary mb-2"
-                    ><i class="bi bi-eye me-1"></i> View All Bookings</a
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="card mb-4">
-                <div class="card-header">System Status (Simulated)</div>
-                <div class="card-body">
-                  <p>
-                    Local Storage: <span class="badge bg-success">Active</span>
-                  </p>
-                  <p>Mock Data: <span class="badge bg-info">Loaded</span></p>
-                  <p>
-                    Current Theme:
-                    <span class="badge bg-secondary" id="current-theme-display"
-                      >Light</span
-                    >
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-        <footer class="bg-light text-muted text-center py-3 mt-auto border-top">
-          <div class="container-fluid">
-            <p class="mb-0">© 2024 Car Rental System. Admin Panel.</p>
-          </div>
-        </footer>
+        </div>
       </div>
-    </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">Quick Actions</div>
+            <div class="card-body">
+              <a
+                href="admin-cars.html#add-car-modal"
+                class="btn btn-primary mb-2"
+                ><i class="bi bi-plus-circle me-1"></i> Add New Car</a
+              >
+              <a href="admin-users.html" class="btn btn-info mb-2"
+                ><i class="bi bi-person-gear me-1"></i> Manage Users</a
+              >
+              <a href="admin-bookings.html" class="btn btn-secondary mb-2"
+                ><i class="bi bi-eye me-1"></i> View All Bookings</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">System Status (Simulated)</div>
+            <div class="card-body">
+              <p>Local Storage: <span class="badge bg-success">Active</span></p>
+              <p>Mock Data: <span class="badge bg-info">Loaded</span></p>
+              <p>
+                Current Theme:
+                <span class="badge bg-secondary" id="current-theme-display"
+                  >Light</span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </include>
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
