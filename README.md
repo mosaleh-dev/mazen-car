@@ -3,10 +3,11 @@
 ## 1. Introduction
 
 This project is a web-based Car Rental System demonstration. It allows users to browse available cars, view details, and make bookings (if logged in). It also features an admin panel for managing cars, users, and bookings. The project is built using standard web technologies (HTML, CSS, JavaScript) with the help of Bootstrap for styling and Vite for development and building. Data is currently persisted using the browser's Local Storage for simplicity.
+[live](https://car-rental-system.pages.dev)
 
 ## 2. Tooling and CI/CD
 
-This project utilizes several tools for a modern development workflow: [**Vite**](https://vitejs.dev/) provides a fast development server and build process; [**Bootstrap 5**](https://getbootstrap.com/) handles responsive styling and components; [**ESLint**](https://eslint.org/) and [**Stylelint**](https://stylelint.io/) enforce JavaScript and CSS code quality; [**JSDoc**](https://jsdoc.app/) is used for code documentation and type hinting within JavaScript comments; [**Prettier**](https://prettier.io/) ensures consistent code formatting; [**Husky**](https://typicode.github.io/husky/) and [**lint-staged**](https://github.com/okonet/lint-staged) automate code checks before commits; and [**GitHub Actions**](https://github.com/features/actions) manage Continuous Integration and Deployment (CI/CD) to GitHub Pages, automating linting, building, and deployment on pushes to the main branch.
+This project utilizes several tools for a modern development workflow: [**Vite**](https://vitejs.dev/) provides a fast development server and build process; [**Bootstrap 5**](https://getbootstrap.com/) handles responsive styling and components; [**ESLint**](https://eslint.org/) and [**Stylelint**](https://stylelint.io/) enforce JavaScript and CSS code quality; [**JSDoc**](https://jsdoc.app/) is used for code documentation and type hinting within JavaScript comments; [**Prettier**](https://prettier.io/) ensures consistent code formatting; [**Husky**](https://typicode.github.io/husky/) and [**lint-staged**](https://github.com/okonet/lint-staged) automate code checks before commits; and [**GitHub Actions**](https://github.com/features/actions) manage Continuous Integration and Deployment (CI/CD) to cloudflare Pages, automating linting, building, and deployment on pushes to the main branch.
 
 ## 3. Folder Structure and Naming Conventions
 
